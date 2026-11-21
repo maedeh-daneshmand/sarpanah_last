@@ -1,0 +1,8 @@
+{
+  "platform": "docker",
+  "app": "sarpanah-backend",
+  "port": 8000,
+  "build": {
+    "dockerfile": "Dockerfile"
+  }
+}

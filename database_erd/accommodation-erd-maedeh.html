@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ارائه تعاملی ERD رزرو اقامتگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --panel:#ffffff; --ink:#263238; --muted:#64748b; --line:#e2e8f0; --accent:#e76f51;
+  --user:#5b8def; --prop:#38a169; --book:#e6a23c; --social:#d66ba0; --ref:#20a4a8;
+  --shadow:0 10px 32px rgba(35,55,80,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"B Nazanin","BNazanin",Nazanin,"Vazirmatn",Tahoma,"Segoe UI",sans-serif;font-size:20px;background:var(--bg);color:var(--ink);overflow:hidden}
+button,input,table,svg text{font-family:inherit}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.28;animation:float 18s ease-in-out infinite}
+.bg i:nth-child(1){width:420px;height:420px;background:#ffb49f;top:-120px;right:-80px}
+.bg i:nth-child(2){width:360px;height:360px;background:#a8e6c0;bottom:-100px;left:-80px;animation-duration:22s;animation-delay:-6s}
+.bg i:nth-child(3){width:280px;height:280px;background:#ffd98a;top:45%;left:40%;opacity:.14;animation-duration:26s;animation-delay:-12s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.12)}66%{transform:translate(-30px,40px) scale(.92)}}
+.progress{position:fixed;top:0;inset-inline:0;height:4px;z-index:5;background:transparent}
+.progress b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--prop));transform-origin:right;transition:width .5s cubic-bezier(.2,.8,.2,1);border-radius:0 0 4px 4px}
+.deck{position:relative;height:calc(100% - 64px);overflow:hidden}
+html{overflow:hidden}
+.slide{position:absolute;inset:0;padding:28px clamp(16px,4vw,56px) 12px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(-60px) scale(.97);filter:blur(6px);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1),filter .5s,visibility .5s}
+.slide.active{opacity:1;visibility:visible;transform:none;filter:none}
+.slide.past{transform:translateX(60px) scale(.97)}
+/* ورود پلکانی عناصر */
+.slide.active :is(.hero,.grid,.flow,.stats,.tabs,.chips,.guide,.keys)>*,
+.slide.active>h2,.slide.active>.sub,.slide.active>.search,.slide.active>.card,.slide.active .erd>*{animation:rise .65s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+@keyframes march{to{stroke-dashoffset:-28}}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 10px var(--c))}}
+@keyframes shine{to{background-position:200% center}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+h1{font-size:clamp(30px,5vw,56px);font-weight:800;line-height:1.3}
+h2{font-size:clamp(22px,3vw,32px);font-weight:800;margin-bottom:6px}
+.sub{color:var(--muted);margin-bottom:20px;line-height:1.9}
+.grad{background:linear-gradient(100deg,var(--accent),var(--prop),var(--book),var(--accent));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+
+/* title */
+.hero{min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:22px;max-width:900px}
+.badge{display:inline-block;padding:4px 14px;border-radius:99px;background:rgba(180,91,69,.12);color:var(--accent);font-size:14px;width:fit-content}
+.stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+.stat{padding:14px 22px;border-radius:14px;background:var(--panel);border:1px solid var(--line);text-align:center;min-width:110px}
+.stat b{display:block;font-size:30px;color:var(--accent)}
+.stat span{color:var(--muted);font-size:13px}
+
+/* domains */
+.dom{border-top:5px solid var(--c);cursor:pointer;transition:transform .2s}
+.dom:hover{transform:translateY(-4px)}
+.dom h3{margin-bottom:8px;color:var(--c)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:12.5px;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 35%,transparent);font-family:inherit;cursor:pointer}
+.chip.plain{cursor:default}
+
+/* diagram */
+.erd{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,1fr);gap:16px;align-items:start}
+.svgwrap{padding:8px;overflow:hidden}
+svg{width:100%;height:auto;display:block}
+.node{cursor:pointer;transition:opacity .25s;transform-box:fill-box;transform-origin:center}
+.node rect{fill:var(--panel);stroke:var(--c);stroke-width:2;transition:all .2s}
+.node:hover rect{stroke-width:3.5;fill:color-mix(in srgb,var(--c) 10%,var(--panel))}
+.node:hover{transform:scale(1.06);transition:transform .2s,opacity .25s}
+.node.sel rect{fill:color-mix(in srgb,var(--c) 18%,var(--panel));stroke-width:4}
+.node.sel{animation:pulse 1.8s ease-in-out infinite}
+svg.play .node{animation:pop .55s cubic-bezier(.3,1.5,.5,1) backwards;animation-delay:calc(var(--i)*55ms)}
+svg.play .edge line{stroke-dasharray:var(--len);animation:draw .9s ease-out backwards;animation-delay:calc(var(--i)*40ms + .4s)}
+svg.play .node.sel{animation:pulse 1.8s ease-in-out infinite}
+.node text{fill:var(--ink);text-anchor:middle;pointer-events:none}
+.node .fa{font-size:14px;font-weight:600}
+.node .en{font-size:9.5px;fill:var(--muted);direction:ltr}
+/* جدول‌های اصلی */
+.node.core rect{fill:color-mix(in srgb,var(--c) 20%,var(--panel));stroke-width:4;filter:drop-shadow(0 4px 8px color-mix(in srgb,var(--c) 45%,transparent))}
+.node.core:hover rect{fill:color-mix(in srgb,var(--c) 30%,var(--panel))}
+.node.core.sel rect{fill:color-mix(in srgb,var(--c) 38%,var(--panel));stroke-width:5}
+.node.core .fa{font-size:19px;font-weight:800}
+.node.core .en{font-size:11px;fill:var(--ink);opacity:.75}
+.node .badge{fill:var(--c);stroke:var(--panel);stroke-width:2.5}
+.node .star{fill:#fff;font-size:13px;font-weight:700}
+.legend .coreKey{color:var(--ink);font-weight:700}
+.edge line{stroke:var(--rc);stroke-width:3;stroke-linecap:round;opacity:.9;transition:all .25s}
+.edge text{font-size:14px;fill:var(--rc);text-anchor:middle;opacity:0;transition:opacity .25s;font-weight:800;paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+.edge:hover line{stroke-width:5}
+.edge.hl line{stroke:var(--rc);stroke-width:4.5;opacity:1;stroke-dasharray:9 6!important;animation:march .8s linear infinite!important}
+.edge.hl text{opacity:1;fill:var(--rc);font-weight:800;paint-order:stroke;stroke:var(--panel);stroke-width:3px}
+.dim .node:not(.rel){opacity:.28}
+.dim .edge:not(.hl){opacity:.18}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);margin-top:8px;padding:0 6px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+.side{position:sticky;top:0;min-height:300px}
+.side.swap>*{animation:rise .45s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--j,0)*60ms)}
+.hint span{display:inline-block;font-size:34px;animation:bob 1.6s ease-in-out infinite}
+.side h3{font-size:20px}
+.side .en{color:var(--muted);direction:ltr;text-align:right;font-size:13px}
+.side p{margin:8px 0 12px;color:var(--muted);line-height:1.9;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);vertical-align:middle;line-height:1.7}
+/* فهرست فیلدها (جایگزین جدول سه‌ستونه) */
+.fl{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px}
+.fr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-content:start;align-items:center;gap:4px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--bg) 55%,var(--panel))}
+.side .fl{grid-template-columns:1fr;gap:8px}
+.fn{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0}
+.nm{direction:ltr;unicode-bidi:isolate;font-weight:800;font-size:16px;overflow-wrap:break-word;word-break:normal}
+.nms{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+.ty{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-size:13px;padding:1px 10px;border-radius:99px;background:color-mix(in srgb,var(--line) 55%,transparent);color:var(--muted)}
+.fd{grid-column:1/-1;color:var(--muted);font-size:15.5px;line-height:1.8}
+th{color:var(--muted);font-weight:800;font-size:14px;background:color-mix(in srgb,var(--line) 35%,transparent)}
+tbody tr:last-child td{border-bottom:0}
+.ft{table-layout:fixed}
+.ft th:nth-child(1){width:36%}.ft th:nth-child(2){width:17%}.ft th:nth-child(3){width:47%}
+td.mono,.mono{direction:ltr;text-align:right;unicode-bidi:isolate}
+td.mono .tag{margin-inline-start:6px}
+.ref{direction:ltr;unicode-bidi:isolate;display:inline-block;font-size:13px;padding:0 7px;border-radius:6px;background:rgba(180,91,69,.10);color:var(--accent);margin-inline:3px}
+.fld{display:block}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;font-weight:700;display:inline-block;line-height:1.5}
+.PK{background:#fde68a;color:#78350f}.FK{background:#bfdbfe;color:#1e3a8a}.UK{background:#e9d5ff;color:#581c87}
+.hint{color:var(--muted);text-align:center;padding:40px 10px;line-height:2}
+.rels{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.rel-btn{display:flex;justify-content:space-between;gap:8px;font:inherit;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--ink);padding:6px 10px;border-radius:10px;cursor:pointer;text-align:right}
+.rel-btn:hover{border-color:var(--accent)}
+.rel-btn b{color:var(--accent);font-weight:600}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tab{font:inherit;padding:8px 18px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff}
+.ent-card{border-top:4px solid var(--c)}
+.ent-card h4{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.ent-card h4 small{color:var(--muted);font-weight:400}
+.ent-card p{color:var(--muted);font-size:13.5px;margin-bottom:8px;line-height:1.8}
+
+/* rel table */
+.search{font:inherit;width:100%;max-width:360px;padding:9px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);margin-bottom:14px}
+.card.tbl{padding:6px 12px;overflow-x:auto}
+.card.tbl tr:hover td{background:rgba(180,91,69,.07)}
+.card-pill{font-size:12px;padding:2px 8px;border-radius:8px;background:rgba(180,91,69,.12);color:var(--accent)}
+/* جدول رابطه‌ها: خوانا و جمله‌محور */
+.rfilters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.rfilters .search{margin:0;flex:1 1 260px}
+.rf{font:inherit;padding:8px 16px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.rf.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.rtable{padding:0;overflow-x:auto}
+.rtable table{min-width:760px;table-layout:fixed}
+.rtable th{position:sticky;top:0;font-size:15px;padding:12px 14px;background:color-mix(in srgb,var(--accent) 12%,var(--panel));color:var(--ink)}
+.rtable th:nth-child(1),.rtable th:nth-child(3){width:19%}
+.rtable th:nth-child(2){width:17%}
+.rtable td{font-size:17px;padding:14px;border-bottom:1px solid var(--line);line-height:1.8}
+.rtable tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--line) 22%,transparent)}
+.rtable tbody tr:last-child td{border-bottom:0}
+.rtable tbody tr:hover td{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.rtable td.ent{border-inline-start:5px solid var(--c)}
+.rtable td.ent b{display:block;font-size:19px;color:var(--c)}
+.rtable td.ent.core{background:color-mix(in srgb,var(--c) 14%,transparent);border-inline-start-width:9px}
+.rtable td.ent.core b{font-size:22px;font-weight:800}
+.rtable td.ent.core b::after{content:" ★";font-size:15px}
+.rtable .en{font-family:"Vazirmatn",Tahoma,sans-serif;direction:ltr;unicode-bidi:isolate;font-size:12.5px;color:var(--muted);display:inline-block}
+.rcell{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.rcell svg{width:70px;height:36px;flex:none}
+.rline{display:block;width:84px;height:6px;border-radius:3px;margin:2px 0 4px}
+.rcell b{font-size:16px}
+.rcell .card-pill{font-size:13px;direction:ltr;font-family:"Vazirmatn",Tahoma,sans-serif}
+.meaning{font-weight:800;font-size:18px;display:block}
+.sent{color:var(--muted);font-size:17px;display:block;margin-top:2px}
+.sent b{color:var(--ink)}
+.rempty{padding:26px;text-align:center;color:var(--muted)}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:18px}
+.step{flex:1 1 120px;font:inherit;text-align:center;padding:14px 8px;border-radius:14px;border:2px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;position:relative;transition:all .2s}
+.step .n{display:block;width:28px;height:28px;border-radius:50%;background:var(--line);margin:0 auto 6px;line-height:28px;font-weight:700;font-size:14px}
+.step:hover{transform:translateY(-3px)}
+.step.on{border-color:var(--accent);transform:translateY(-4px);box-shadow:var(--shadow)}
+.step.on .n{animation:pulse 1.6s infinite;--c:var(--accent)}
+.flowinfo.swap>*{animation:rise .45s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--j,0)*70ms)}
+.step:not(:last-child)::after{content:"";position:absolute;top:50%;left:-12px;width:12px;height:2px;background:var(--line)}
+.step.on:not(:last-child)::after{background:var(--accent)}
+.step.on .n{background:var(--accent);color:#fff}
+.flowinfo{min-height:140px}
+.flowinfo h3{margin-bottom:6px}
+.flowinfo p{color:var(--muted);line-height:1.9;margin-bottom:10px}
+
+/* notes */
+.note{position:relative;padding-top:48px}
+.note .ic{position:absolute;top:-16px;right:18px;width:44px;height:44px;border-radius:14px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:var(--shadow)}
+.note:hover .ic{animation:wiggle .6s}
+.card{transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:not(.svgwrap):not(.side):not(.tbl):hover{transform:translateY(-4px);border-color:var(--accent)}
+
+/* راهنما */
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:18px}
+.key{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+kbd{font-size:13px;padding:3px 9px;border-radius:8px;border:1px solid var(--line);border-bottom-width:3px;background:var(--bg);white-space:nowrap}
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:18px}
+.guide h3{margin-bottom:10px}
+.gl dt{font-weight:800;color:var(--accent);margin-top:10px}
+.gl dd{color:var(--muted);line-height:1.9;font-size:16px}
+.faq details{border-bottom:1px solid var(--line);padding:10px 0}
+.faq summary{cursor:pointer;font-weight:800;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:24px;color:var(--accent);transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(135deg)}
+.faq details p{color:var(--muted);line-height:1.9;margin-top:8px;font-size:16px;animation:rise .4s backwards}
+.sym{display:flex;align-items:center;gap:10px;margin:8px 0;color:var(--muted);font-size:16px}
+.sym b{color:var(--ink)}
+@media (max-width:860px){body{font-size:18px}}
+th,td{font-size:15.5px}
+.sub{font-size:19px}
+.node .fa{font-size:15px}
+.node .en{font-size:9px}
+.note h3{margin-bottom:6px;font-size:17px}
+.note p{color:var(--muted);line-height:1.9;font-size:14px}
+.note code,.sub code,.faq code{background:rgba(180,91,69,.12);color:var(--accent);padding:1px 6px;border-radius:6px;font-size:12.5px;direction:ltr;display:inline-block}
+
+/* nav */
+.nav{position:fixed;bottom:0;inset-inline:0;height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 clamp(12px,3vw,40px);background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.nbtn{font:inherit;border:0;background:var(--accent);color:#fff;padding:9px 20px;border-radius:12px;cursor:pointer;font-weight:600}
+.nbtn:disabled{opacity:.35;cursor:default}
+.dots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.dot{width:11px;height:11px;border-radius:99px;border:0;background:var(--line);cursor:pointer;transition:all .25s;padding:0}
+.dot.on{width:30px;background:var(--accent)}
+.count{color:var(--muted);font-size:13px;min-width:48px;text-align:center}
+@media (max-width:860px){.erd{grid-template-columns:1fr}.side{position:static}.count{display:none}}
+</style>
+</head>
+<body>
+
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="progress"><b id="bar"></b></div>
+<div class="deck" id="deck">
+
+  <!-- 1 -->
+  <section class="slide">
+    <div class="hero">
+      <span class="badge">طراحی پایگاه داده</span>
+      <h1>نمودار موجودیت–رابطه <br><span class="grad">سایت رزرو اقامتگاه</span></h1>
+      <p class="sub" style="font-size:18px;max-width:640px">یک گشت تعاملی در ساختار داده‌های یک پلتفرم رزرو؛ از ساختار مکان‌ها و کاربران تا اقامتگاه، رزرو، پرداخت و تعاملات.</p>
+      <div class="stats">
+        <div class="stat"><b id="sE">0</b><span>موجودیت</span></div>
+        <div class="stat"><b id="sR">0</b><span>رابطه</span></div>
+        <div class="stat"><b id="sD">0</b><span>دامنه</span></div>
+      </div>
+      <p class="sub">برای حرکت: کلیدهای <b>← →</b> یا دکمه‌های پایین صفحه</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2>نمای کلی: پنج بخش اصلی سیستم</h2>
+    <p class="sub">روی هر بخش کلیک کنید تا جدول‌های مرتبط با آن را ببینید.</p>
+    <div class="grid g4" id="domains"></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2>نمودار تعاملی</h2>
+    <p class="sub">روی هر جدول کلیک کنید تا رابطه‌ها پررنگ شوند و فیلدها در پنل کناری نمایش داده شوند.</p>
+    <div class="erd">
+      <div>
+        <div class="card svgwrap"><svg id="svg" viewBox="0 0 1000 790" role="img" aria-label="نمودار ERD"></svg></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="card side" id="side"></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2>جدول‌ها و فیلدها</h2>
+    <p class="sub">دامنه را انتخاب کنید.</p>
+    <div class="tabs" id="tabs"></div>
+    <div class="grid" id="entCards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));align-items:start"></div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2>رابطه‌ها و کاردینالیتی</h2>
+    <p class="sub">اول انواع رابطه را ببینید، سپس در جدول پایین رابطه‌های واقعی این پروژه را جستجو کنید. روی هر ردیف کلیک کنید تا در نمودار باز شود.</p>
+    <div class="grid g4 rtypes" id="rtypes" style="margin-bottom:22px"></div>
+    <div class="rfilters">
+      <input class="search" id="search" placeholder="جستجو: مثلاً رزرو یا USER …">
+      <button class="rf on" data-f="all">همه</button>
+      <button class="rf" data-f="N">یک‌به‌چند</button>
+      <button class="rf" data-f="0..1">یک‌به‌یک (اختیاری)</button>
+    </div>
+    <div class="card tbl rtable"><table><thead><tr><th>جدول والد (سمت «یک»)</th><th>نوع رابطه و رنگ خط در نمودار</th><th>جدول فرزند</th><th>توضیح</th></tr></thead><tbody id="relBody"></tbody></table><div class="rempty" id="rempty" hidden>رابطه‌ای با این جستجو پیدا نشد.</div></div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2>مسیر یک رزرو در دیتابیس</h2>
+    <p class="sub">روی هر مرحله کلیک کنید تا ببینید کدام جدول‌ها درگیر می‌شوند.</p>
+    <div class="flow" id="flow"></div>
+    <div class="card flowinfo" id="flowInfo"></div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2>تصمیم‌های طراحی</h2>
+    <p class="sub">نکاتی که ساختار را انعطاف‌پذیر و درست نگه می‌دارد.</p>
+    <div class="grid g3" style="margin-top:26px;row-gap:34px">
+      <div class="card note"><div class="ic">🏨</div><h3>اقامتگاه با واحد فرق دارد</h3><p><code>PROPERTY</code> اطلاعات کلی محل را نگه می‌دارد؛ <code>UNIT</code> همان اتاق یا فضایی است که مهمان رزرو می‌کند.</p></div>
+      <div class="card note"><div class="ic">🌍</div><h3>مکان‌ها جدا ذخیره می‌شوند</h3><p><code>COUNTRY</code> ← <code>PROVINCE</code> ← <code>CITY</code> از تکرار نام کشور و استان در اطلاعات اقامتگاه جلوگیری می‌کند.</p></div>
+      <div class="card note"><div class="ic">🔗</div><h3>رابطه چندبه‌چند</h3><p><code>PROPERTY_AMENITY</code> و <code>WISHLIST_ITEM</code> جدول‌های واسط‌اند؛ کلید ترکیبی جلوی ثبت تکراری را می‌گیرد.</p></div>
+      <div class="card note"><div class="ic">📅</div><h3>هر شب یک ردیف</h3><p><code>BOOKING_NIGHT</code> شب‌های رزرو را جدا نگه می‌دارد و قید یکتای <code>(unit_id, night)</code> جلوی رزرو هم‌زمان یک شب را می‌گیرد.</p></div>
+      <div class="card note"><div class="ic">💳</div><h3>سابقه پرداخت حفظ می‌شود</h3><p>در <code>PAYMENT</code> هر تلاش پرداخت یک ردیف جداست؛ پرداخت ناموفق یا بازپرداخت هم از بین نمی‌رود.</p></div>
+      <div class="card note"><div class="ic">⭐</div><h3>هر رزرو حداکثر یک نظر</h3><p>فیلد یکتای <code>booking_id</code> در <code>REVIEW</code> اجازه نمی‌دهد برای یک رزرو چند نظر ثبت شود.</p></div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <div class="hero">
+      <span class="badge">جمع‌بندی</span>
+      <h1>از جستجو تا <span class="grad">نظر مهمان</span></h1>
+      <p class="sub" style="font-size:18px;max-width:640px">این ERD ساختار اصلی سامانه رزرو را نشان می‌دهد: اطلاعات مکان، کاربران، اقامتگاه‌ها، واحدهای قابل رزرو، شب‌های رزرو، پرداخت و تعاملات.</p>
+      <div class="stats">
+        <button class="nbtn" onclick="go(2)">بازگشت به نمودار</button>
+        <button class="nbtn" onclick="go(0)" style="background:var(--prop)">شروع دوباره</button>
+        <button class="nbtn" onclick="go(8)" style="background:var(--book)">راهنما و توضیحات</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2>راهنما و توضیحات</h2>
+    <p class="sub">طرز استفاده از این ارائه، معنی اصطلاحات و پاسخ پرسش‌های رایج.</p>
+
+    <div class="keys">
+      <div class="key"><kbd>←</kbd><span>اسلاید بعدی (جهت راست‌به‌چپ)</span></div>
+      <div class="key"><kbd>→</kbd><span>اسلاید قبلی</span></div>
+      <div class="key"><kbd>Space</kbd><span>اسلاید بعدی</span></div>
+      <div class="key"><kbd>Home</kbd> <kbd>End</kbd><span>اول و آخر ارائه</span></div>
+      <div class="key"><kbd>Enter</kbd><span>انتخاب جدول فوکوس‌شده در نمودار</span></div>
+      <div class="key"><kbd>👆</kbd><span>در موبایل: کشیدن انگشت به چپ یا راست</span></div>
+    </div>
+
+    <div class="guide">
+      <div class="card">
+        <h3>🧭 چطور نمودار را بخوانیم؟</h3>
+        <div class="sym"><b>جعبه</b> هر جعبه یک جدول (موجودیت) است و رنگ آن دامنه‌اش را نشان می‌دهد.</div>
+        <div class="sym"><b>خط</b> یک رابطه بین دو جدول است. با انتخاب جدول، خط‌های مرتبط متحرک می‌شوند.</div>
+        <div class="sym"><b>۱ و N</b> کنار هر خط، تعداد مجاز در هر سمت رابطه را نشان می‌دهد.</div>
+        <div class="sym"><b>پنل کناری</b> فیلدها، نوع داده و رابطه‌های جدول انتخاب‌شده را فهرست می‌کند؛ روی هر رابطه کلیک کنید تا به جدول بعدی بروید.</div>
+      </div>
+      <div class="card">
+        <h3>📖 واژه‌نامه</h3>
+        <dl class="gl">
+          <dt>ERD</dt><dd>نمودار موجودیت–رابطه؛ نقشه‌ای از جدول‌ها و ارتباط بین آن‌ها.</dd>
+          <dt><span class="tag PK">PK</span> کلید اصلی</dt><dd>فیلدی که هر ردیف را یکتا مشخص می‌کند.</dd>
+          <dt><span class="tag FK">FK</span> کلید خارجی</dt><dd>فیلدی که به کلید اصلی جدول دیگر اشاره می‌کند.</dd>
+          <dt><span class="tag UK">UK</span> کلید یکتا</dt><dd>مقدار آن در کل جدول نباید تکراری باشد (مثل ایمیل).</dd>
+          <dt>کاردینالیتی</dt><dd>تعداد ردیف‌هایی که در یک رابطه می‌توانند به هم وصل شوند: ۱:۱، ۱:N یا N:M.</dd>
+          <dt>جدول واسط</dt><dd>جدولی که رابطه چند‌به‌چند را به دو رابطه ۱:N می‌شکند.</dd>
+        </dl>
+      </div>
+      <div class="card faq">
+        <h3>❓ پرسش‌های رایج</h3>
+        <details><summary>چرا رزرو روی «واحد» است و نه «اقامتگاه»؟</summary><p>چون یک اقامتگاه مثل هتل چند اتاق با قیمت و ظرفیت متفاوت دارد. اگر رزرو روی کل اقامتگاه بود، نمی‌شد اتاق‌ها را جدا فروخت.</p></details>
+        <details><summary>مبلغ کل رزرو چگونه محاسبه می‌شود؟</summary><p>مجموع قیمت هر شب از <code>UNIT_PRICE_CALENDAR</code> در بازه اقامت، منهای تخفیف کد <code>COUPON</code>. نتیجه در <code>BOOKING.total_price</code> ثبت می‌شود تا با تغییر قیمت‌ها بعدی عوض نشود.</p></details>
+        <details><summary>اگر پرداخت ناموفق بود چه می‌شود؟</summary><p>یک ردیف با وضعیت failed در <code>PAYMENT</code> ثبت می‌شود و رزرو در حالت pending می‌ماند تا کاربر دوباره تلاش کند یا مهلت تمام شود.</p></details>
+        <details><summary>آیا می‌توان این ERD را گسترش داد؟</summary><p>بله. برای نمونه جدول کیف پول، ارز، ترجمه چندزبانه یا امتیاز وفاداری را می‌توان بدون تغییر هسته اضافه کرد.</p></details>
+        <details><summary>چرا فونت تغییر نمی‌کند؟</summary><p>فونت «B Nazanin» باید روی سیستم شما نصب باشد؛ در غیر این صورت مرورگر فونت جایگزین (وزیرمتن یا Tahoma) را نشان می‌دهد.</p></details>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <h3 style="margin-bottom:6px">📁 فایل‌های پروژه</h3>
+      <p class="sub" style="margin:0;font-size:17px"><code>ERD.md</code> نمودار Mermaid و نکات طراحی. &nbsp; <code>erd-presentation.html</code> همین ارائه تعاملی که بدون نیاز به سرور باز می‌شود.</p>
+    </div>
+  </section>
+</div>
+
+<nav class="nav">
+  <button class="nbtn" id="prev">قبلی</button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count"></span>
+  <button class="nbtn" id="next">بعدی</button>
+</nav>
+
+<script>
+/* ---------- داده‌ها ---------- */
+
+const DOM = {
+  loc:  {fa:'مکان‌ها', c:'#20a4a8', d:'کشور، استان و شهر؛ برای دسته‌بندی و جستجوی اقامتگاه‌ها'},
+  user: {fa:'کاربران', c:'#5b8def', d:'حساب کاربری، نقش مهمان و میزبان، فهرست علاقه‌مندی‌ها و پیام‌ها'},
+  prop: {fa:'اقامتگاه', c:'#38a169', d:'مشخصات اقامتگاه، واحدها، امکانات، عکس‌ها و قیمت روزانه'},
+  book: {fa:'رزرو و پرداخت', c:'#e6a23c', d:'رزرو، شب‌های رزرو، کد تخفیف و تراکنش‌های مالی'},
+  soc:  {fa:'تعاملات', c:'#d66ba0', d:'نظر مهمان، فهرست علاقه‌مندی‌ها و گفت‌وگو'},
+};
+const F=(n,t,k,d)=>({n,t,k,d});
+const E = {
+ COUNTRY:{fa:'کشور',dom:'loc',x:100,y:75,desc:'فهرست کشورهایی که استان‌ها و شهرها به آن‌ها تعلق دارند.',
+  f:[F('id','int','PK','شناسه'),F('name','varchar(100)','','نام کشور؛ یکتا'),F('iso_code','char(2)','UK','کد دوحرفی کشور؛ یکتا')]},
+ PROVINCE:{fa:'استان',dom:'loc',x:100,y:190,desc:'هر استان متعلق به یک کشور است و نام آن در همان کشور تکراری نیست.',
+  f:[F('id','int','PK','شناسه'),F('country_id','int','FK','→ COUNTRY'),F('name','varchar(100)','','نام استان'),F('(country_id, name)','unique','UK','ترکیب کشور و نام استان یکتا است')]},
+ CITY:{fa:'شهر',dom:'loc',x:100,y:305,desc:'هر شهر به یک استان تعلق دارد؛ اقامتگاه‌ها با شناسه شهر دسته‌بندی می‌شوند.',
+  f:[F('id','int','PK','شناسه'),F('province_id','int','FK','→ PROVINCE'),F('name','varchar(100)','','نام شهر'),F('(province_id, name)','unique','UK','نام شهر در هر استان یکتا است')]},
+ USER:{fa:'کاربر',dom:'user',x:350,y:305,desc:'یک جدول برای همه افراد؛ نقش مشخص می‌کند کاربر مهمان، میزبان یا مدیر است.',
+  f:[F('id','int','PK','شناسه'),F('full_name','varchar(150)','','نام کامل'),F('email','varchar(255)','UK','ایمیل یکتا'),F('phone','varchar(20)','UK','شماره تلفن یکتا؛ اختیاری'),F('password_hash','varchar(255)','','رمز عبور هش‌شده'),F('role','enum','','guest | host | admin'),F('is_active','boolean','','فعال بودن حساب'),F('created_at','datetime','','زمان ثبت‌نام')]},
+ PROPERTY_TYPE:{fa:'نوع اقامتگاه',dom:'prop',x:350,y:75,desc:'جدول مرجع برای دسته‌بندی اقامتگاه‌ها؛ مثل ویلا، آپارتمان یا کلبه.',
+  f:[F('id','int','PK','شناسه'),F('name','varchar(60)','UK','نام نوع؛ یکتا')]},
+ CANCELLATION_POLICY:{fa:'قانون لغو',dom:'prop',x:350,y:190,desc:'قوانین لغو رزرو و درصد بازپرداختی که برای اقامتگاه در نظر گرفته می‌شود.',
+  f:[F('id','int','PK','شناسه'),F('name','varchar(60)','UK','نام سیاست؛ یکتا'),F('free_cancel_days','int','','تعداد روزهای لغو رایگان'),F('refund_percent','decimal(5,2)','','درصد بازپرداخت؛ بین صفر تا صد')]},
+ PROPERTY:{fa:'اقامتگاه',dom:'prop',x:600,y:305,desc:'اطلاعات کلی محل اقامت؛ میزبان، شهر، نوع و قانون لغو با کلید خارجی مشخص می‌شوند.',
+  f:[F('id','int','PK','شناسه'),F('host_id','int','FK','→ USER؛ میزبان'),F('city_id','int','FK','→ CITY'),F('type_id','int','FK','→ PROPERTY_TYPE'),F('policy_id','int','FK','→ CANCELLATION_POLICY'),F('title','varchar(200)','','عنوان اقامتگاه'),F('description','text','','توضیحات'),F('address','varchar(300)','','نشانی'),F('latitude / longitude','decimal(9,6)','','مختصات جغرافیایی؛ اختیاری'),F('check_in_time / check_out_time','time','','ساعت ورود و خروج'),F('status','enum','','draft | active | suspended'),F('created_at / updated_at','datetime','','زمان ایجاد و آخرین ویرایش')]},
+ UNIT:{fa:'واحد قابل رزرو',dom:'prop',x:850,y:305,desc:'چیزی که واقعاً رزرو می‌شود؛ مثلاً یک اتاق در هتل یا یک سوئیت در یک اقامتگاه.',
+  f:[F('id','int','PK','شناسه'),F('property_id','int','FK','→ PROPERTY'),F('name','varchar(120)','','نام واحد'),F('max_guests','int','','حداکثر تعداد مهمان'),F('bedrooms / beds / bathrooms','int','','تعداد اتاق‌خواب، تخت و حمام'),F('base_price_per_night','decimal(12,2)','','قیمت پایه هر شب'),F('cleaning_fee','decimal(12,2)','','هزینه نظافت'),F('is_active','boolean','','فعال بودن واحد')]},
+ AMENITY:{fa:'امکانات',dom:'prop',x:850,y:75,desc:'فهرست امکاناتی که می‌توان به اقامتگاه‌ها نسبت داد؛ مثل وای‌فای، پارکینگ و استخر.',
+  f:[F('id','int','PK','شناسه'),F('name','varchar(80)','UK','نام امکان؛ یکتا'),F('icon','varchar(100)','','نام آیکون؛ اختیاری')]},
+ PROPERTY_AMENITY:{fa:'امکانات اقامتگاه',dom:'prop',x:600,y:190,desc:'جدول واسط برای رابطه چندبه‌چند: هر اقامتگاه چند امکان دارد و هر امکان می‌تواند در چند اقامتگاه باشد.',
+  f:[F('property_id','int','PK, FK','→ PROPERTY'),F('amenity_id','int','PK, FK','→ AMENITY'),F('(property_id, amenity_id)','composite PK','','جلوگیری از ثبت تکراری یک امکان برای یک اقامتگاه')]},
+ PHOTO:{fa:'عکس',dom:'prop',x:850,y:420,desc:'آدرس عکس‌های اقامتگاه؛ در صورت نیاز یک عکس می‌تواند به واحد مشخصی هم مربوط باشد.',
+  f:[F('id','int','PK','شناسه'),F('property_id','int','FK','→ PROPERTY'),F('unit_id','int','FK','→ UNIT؛ اختیاری'),F('url','varchar(500)','','آدرس فایل عکس'),F('sort_order','int','','ترتیب نمایش')]},
+ UNIT_PRICE_CALENDAR:{fa:'تقویم قیمت',dom:'prop',x:850,y:535,desc:'قیمت و مسدود بودن هر واحد در هر روز؛ برای تفاوت قیمت روزهای عادی و تعطیلات.',
+  f:[F('id','int','PK','شناسه'),F('unit_id','int','FK','→ UNIT'),F('day','date','','تاریخ'),F('price','decimal(12,2)','','قیمت همان روز'),F('is_blocked','boolean','','مسدود بودن روز'),F('(unit_id, day)','unique','UK','برای هر واحد در هر روز فقط یک رکورد')]},
+ COUPON:{fa:'کد تخفیف',dom:'book',x:350,y:535,desc:'کدهایی که در بازه زمانی مشخص برای رزرو تخفیف ایجاد می‌کنند.',
+  f:[F('id','int','PK','شناسه'),F('code','varchar(40)','UK','کد تخفیف یکتا'),F('discount_percent','decimal(5,2)','','درصد تخفیف'),F('valid_from / valid_to','date','','بازه اعتبار'),F('usage_limit','int','','سقف استفاده؛ اختیاری')]},
+ BOOKING:{fa:'رزرو',dom:'book',x:600,y:535,desc:'رکورد اصلی رزرو؛ مهمان، واحد، تاریخ اقامت، مبلغ نهایی و وضعیت را نگه می‌دارد.',
+  f:[F('id','int','PK','شناسه'),F('guest_id','int','FK','→ USER؛ مهمان'),F('unit_id','int','FK','→ UNIT'),F('coupon_id','int','FK','→ COUPON؛ اختیاری'),F('check_in / check_out','date','','تاریخ ورود و خروج'),F('guests_count','int','','تعداد مهمانان'),F('nights','int','','تعداد شب‌ها'),F('subtotal','decimal(12,2)','','جمع قیمت شب‌ها'),F('cleaning_fee / service_fee','decimal(12,2)','','هزینه نظافت و خدمات'),F('discount_amount','decimal(12,2)','','مبلغ تخفیف'),F('total_price','decimal(12,2)','','مبلغ نهایی'),F('status','enum','','pending | confirmed | cancelled | completed | rejected'),F('created_at / cancelled_at','datetime','','زمان ثبت و لغو')]},
+ BOOKING_NIGHT:{fa:'شب‌های رزرو',dom:'book',x:600,y:675,desc:'برای هر شب رزروشده یک ردیف نگه می‌دارد؛ قید یکتا روی واحد و شب، از رزرو هم‌زمان یک شب جلوگیری می‌کند.',
+  f:[F('booking_id','int','PK, FK','→ BOOKING'),F('unit_id','int','FK','→ UNIT'),F('night','date','PK','تاریخ شب رزروشده'),F('price','decimal(12,2)','','قیمت همان شب در زمان رزرو'),F('(unit_id, night)','unique','UK','یک واحد در یک شب نمی‌تواند دو بار رزرو شود')]},
+ PAYMENT:{fa:'پرداخت',dom:'book',x:850,y:675,desc:'هر تلاش پرداخت یا بازپرداخت به‌صورت یک تراکنش جدا ذخیره می‌شود.',
+  f:[F('id','int','PK','شناسه'),F('booking_id','int','FK','→ BOOKING'),F('amount','decimal(12,2)','','مبلغ تراکنش'),F('method','enum','','card | wallet | bank_transfer'),F('status','enum','','pending | successful | failed | refunded'),F('transaction_ref','varchar(100)','UK','کد پیگیری؛ یکتا و اختیاری'),F('paid_at / created_at','datetime','','زمان پرداخت و ایجاد رکورد')]},
+ REVIEW:{fa:'نظر و امتیاز',dom:'soc',x:350,y:675,desc:'نظر ثبت‌شده برای یک رزرو؛ یکتا بودن booking_id یعنی هر رزرو حداکثر یک نظر دارد.',
+  f:[F('id','int','PK','شناسه'),F('booking_id','int','FK, UK','→ BOOKING؛ یکتا'),F('rating','int','','امتیاز از ۱ تا ۵'),F('comment','text','','متن نظر؛ اختیاری'),F('created_at','datetime','','زمان ثبت')]},
+ WISHLIST:{fa:'فهرست علاقه‌مندی',dom:'soc',x:100,y:535,desc:'هر کاربر می‌تواند چند فهرست علاقه‌مندی با نام‌های جداگانه بسازد.',
+  f:[F('id','int','PK','شناسه'),F('user_id','int','FK','→ USER'),F('name','varchar(100)','','نام فهرست'),F('created_at','datetime','','زمان ایجاد'),F('(user_id, name)','unique','UK','نام فهرست برای هر کاربر یکتا است')]},
+ WISHLIST_ITEM:{fa:'مورد علاقه‌مندی',dom:'soc',x:100,y:675,desc:'جدول واسطی که مشخص می‌کند کدام اقامتگاه در کدام فهرست ذخیره شده است.',
+  f:[F('wishlist_id','int','PK, FK','→ WISHLIST'),F('property_id','int','PK, FK','→ PROPERTY'),F('added_at','datetime','','زمان اضافه شدن'),F('(wishlist_id, property_id)','composite PK','','هر اقامتگاه در یک فهرست فقط یک بار ثبت می‌شود')]},
+ MESSAGE:{fa:'پیام',dom:'soc',x:100,y:420,desc:'پیام بین دو کاربر؛ می‌تواند به یک رزرو مشخص مرتبط باشد یا مستقل از رزرو باشد.',
+  f:[F('id','int','PK','شناسه'),F('sender_id','int','FK','→ USER؛ فرستنده'),F('receiver_id','int','FK','→ USER؛ گیرنده'),F('booking_id','int','FK','→ BOOKING؛ اختیاری'),F('body','text','','متن پیام'),F('sent_at','datetime','','زمان ارسال')]},
+};
+// [والد, فرزند, کاردینالیتی والد, کاردینالیتی فرزند, معنا]
+const R = [
+ ['COUNTRY','PROVINCE','1','N','هر کشور چند استان دارد'],
+ ['PROVINCE','CITY','1','N','هر استان چند شهر دارد'],
+ ['CITY','PROPERTY','1','N','اقامتگاه در یک شهر ثبت می‌شود'],
+ ['USER','PROPERTY','1','N','کاربر در نقش میزبان اقامتگاه ثبت می‌کند'],
+ ['PROPERTY_TYPE','PROPERTY','1','N','هر اقامتگاه یک نوع دارد'],
+ ['CANCELLATION_POLICY','PROPERTY','1','N','هر اقامتگاه یک قانون لغو دارد'],
+ ['PROPERTY','UNIT','1','N','هر اقامتگاه یک یا چند واحد قابل رزرو دارد'],
+ ['PROPERTY','PROPERTY_AMENITY','1','N','امکانات انتخاب‌شده برای اقامتگاه'],
+ ['AMENITY','PROPERTY_AMENITY','1','N','هر امکان می‌تواند در چند اقامتگاه باشد'],
+ ['PROPERTY','PHOTO','1','N','عکس‌های اقامتگاه'],
+ ['UNIT','PHOTO','1','N','عکس مربوط به یک واحد خاص؛ اختیاری'],
+ ['UNIT','UNIT_PRICE_CALENDAR','1','N','قیمت و وضعیت هر روز برای واحد'],
+ ['USER','BOOKING','1','N','کاربر در نقش مهمان رزرو ثبت می‌کند'],
+ ['UNIT','BOOKING','1','N','هر رزرو برای یک واحد است'],
+ ['COUPON','BOOKING','1','N','کد تخفیف؛ استفاده در رزرو اختیاری است'],
+ ['BOOKING','BOOKING_NIGHT','1','N','جزئیات شب‌های هر رزرو'],
+ ['UNIT','BOOKING_NIGHT','1','N','هر شب رزروشده مربوط به یک واحد است'],
+ ['BOOKING','PAYMENT','1','N','هر رزرو می‌تواند چند تراکنش داشته باشد'],
+ ['BOOKING','REVIEW','1','0..1','هر رزرو حداکثر یک نظر دارد'],
+ ['USER','WISHLIST','1','N','هر کاربر می‌تواند چند فهرست بسازد'],
+ ['WISHLIST','WISHLIST_ITEM','1','N','اقامتگاه‌های ذخیره‌شده در فهرست'],
+ ['PROPERTY','WISHLIST_ITEM','1','N','یک اقامتگاه می‌تواند در فهرست‌های مختلف باشد'],
+ ['USER','MESSAGE','1','N','پیام به‌عنوان فرستنده (sender_id)'],
+ ['USER','MESSAGE','1','N','پیام به‌عنوان گیرنده (receiver_id)'],
+ ['BOOKING','MESSAGE','1','N','پیام مرتبط با رزرو؛ اختیاری'],
+];
+
+const FLOW = [
+ {t:'جستجوی اقامتگاه',tb:['COUNTRY','PROVINCE','CITY','PROPERTY_TYPE','PROPERTY','AMENITY'],p:'مهمان شهر، نوع اقامتگاه و امکانات موردنظر را انتخاب می‌کند؛ اطلاعات مکان و ویژگی‌ها از جدول‌های مرجع خوانده می‌شوند.'},
+ {t:'بررسی اقامتگاه و واحد',tb:['PROPERTY','UNIT','PHOTO','CANCELLATION_POLICY','UNIT_PRICE_CALENDAR'],p:'مهمان مشخصات اقامتگاه، عکس‌ها، واحدهای قابل رزرو، قانون لغو و قیمت روزانه را می‌بیند.'},
+ {t:'ثبت درخواست رزرو',tb:['USER','BOOKING','COUPON','BOOKING_NIGHT'],p:'رزرو برای یک مهمان و یک واحد ثبت می‌شود. برای هر شب، ردیف جدا در booking_night ذخیره می‌شود تا تداخل رزرو کنترل شود.'},
+ {t:'پرداخت',tb:['BOOKING','PAYMENT'],p:'تلاش‌های پرداخت در payment ذخیره می‌شوند؛ ممکن است یک رزرو چند تراکنش ناموفق یا موفق داشته باشد.'},
+ {t:'تعامل با اقامتگاه',tb:['USER','MESSAGE','WISHLIST','WISHLIST_ITEM'],p:'کاربر می‌تواند به میزبان پیام بدهد و اقامتگاه را در یکی از فهرست‌های علاقه‌مندی خود ذخیره کند.'},
+ {t:'ثبت نظر',tb:['BOOKING','REVIEW'],p:'پس از تکمیل اقامت، برای رزرو نظر و امتیاز ثبت می‌شود؛ هر رزرو حداکثر یک نظر دارد.'},
+];
+
+/* ---------- ابزار ---------- */
+const $=s=>document.querySelector(s);
+const col=k=>DOM[E[k].dom].c;
+const el=(t,a={},h='')=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);e.innerHTML=h;return e};
+// توضیح فیلد: نام جدول‌های انگلیسی را از متن فارسی جدا و در برچسب ltr می‌گذارد تا ترتیب حروف به‌هم نریزد
+const descHtml=d=>{
+  const m=d.match(/^(.*?)\s*→\s*([A-Z_]+)\s*(.*)$/);
+  if(!m)return d.replace(/\b(pending|confirmed|cancelled|completed|paid|failed|refunded|draft|active|suspended|guest|host|admin)\b/g,'<bdi class="ref">$1</bdi>').replace(/\|/g,'،');
+  const pre=m[1]?m[1]+'، ':'';
+  return `${pre}اشاره به <bdi class="ref">${m[2]}</bdi>${m[3]?' '+m[3]:''}`;
+};
+const fieldsTable=k=>'<div class="fl">'+
+  E[k].f.map(f=>`<div class="fr"><div class="fn"><span class="nms">${f.n.split(' / ').map(n=>`<span class="nm">${n.replace(/_/g,'_<wbr>')}</span>`).join('')}</span>${f.k?`<span class="tag ${f.k}">${f.k}</span>`:''}</div><span class="ty">${f.t}</span><div class="fd">${descHtml(f.d)}</div></div>`).join('')+'</div>';
+function countUp(id,n){const e=$(id);let t0=null;const d=1100;e.textContent=(0).toLocaleString('fa');
+  const f=t=>{if(t0===null)t0=t;const p=Math.min(1,(t-t0)/d);e.textContent=Math.round(n*(1-Math.pow(1-p,3))).toLocaleString('fa');if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function playStats(){countUp('#sE',Object.keys(E).length);countUp('#sR',R.length);countUp('#sD',Object.keys(DOM).length)}
+
+/* ---------- انیمیشن ---------- */
+function stagger(sl){
+  sl.querySelectorAll('.hero,.grid,.flow,.stats,.tabs,.keys,.guide,.erd,.chips').forEach(c=>{[...c.children].forEach((k,i)=>k.style.setProperty('--i',i))});
+  [...sl.children].forEach((k,i)=>k.style.setProperty('--i',i));
+}
+function playDiagram(){svg.classList.remove('play');void svg.getBoundingClientRect();svg.classList.add('play')}
+
+/* ---------- ناوبری ---------- */
+const slides=[...document.querySelectorAll('.slide')]; let cur=0;
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>{s.classList.toggle('active',j===cur);s.classList.toggle('past',j<cur)});
+  document.querySelectorAll('.dot').forEach((d,j)=>d.classList.toggle('on',j===cur));
+  $('#prev').disabled=cur===0; $('#next').disabled=cur===slides.length-1;
+  $('#count').textContent=(cur+1).toLocaleString('fa')+' / '+slides.length.toLocaleString('fa');
+  slides[cur].scrollTop=0;
+  $('#bar').style.width=((cur+1)/slides.length*100)+'%';
+  stagger(slides[cur]);
+  if(cur===0)playStats();
+  if(cur===2)playDiagram();
+  try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+}
+slides.forEach((_,i)=>{const d=el('button',{class:'dot','aria-label':'اسلاید '+(i+1)});d.onclick=()=>go(i);$('#dots').append(d)});
+$('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(['ArrowLeft','PageDown'].includes(e.key)||(e.key===' '&&!e.shiftKey)){e.preventDefault();go(cur+1)}
+  if(['ArrowRight','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}
+  if(e.key==='Home')go(0); if(e.key==='End')go(slides.length-1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>80&&!e.target.closest('svg,table'))go(cur+(d<0?1:-1));tx=null});
+
+/* ---------- اسلاید دامنه‌ها ---------- */
+Object.entries(DOM).forEach(([id,d])=>{
+  const names=Object.keys(E).filter(k=>E[k].dom===id);
+  const c=el('div',{class:'card dom',style:`--c:${d.c}`},`<h3>${d.fa}</h3><p class="sub" style="margin:0">${d.d}</p><div class="chips">${names.map(n=>`<span class="chip plain">${E[n].fa}</span>`).join('')}</div>`);
+  c.onclick=()=>{go(3);setTab(id)};
+  $('#domains').append(c);
+});
+
+/* ---------- نمودار ---------- */
+const svg=$('#svg'); const NS='http://www.w3.org/2000/svg'; const BW=150,BH=46;
+const S=(t,a={},h='')=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);e.innerHTML=h;return e};
+const gE=S('g'), gN=S('g'), gL=S('g',{style:'pointer-events:none'}); svg.append(gE,gN,gL);
+// هر رابطه یک رنگ مخصوص دارد؛ همان رنگ در نمودار، پنل کناری و جدول رابطه‌ها تکرار می‌شود
+const RC=['#e76f51','#5b8def','#38a169','#e6a23c','#d66ba0','#20a4a8','#a87843','#9270a6','#8b9a62','#4f817a','#a05252','#7b779f','#c07855','#6d9274','#c18a4a','#528b9b','#986b8a','#806b5c','#637fa1','#a65d5d','#82935c','#806b9a'];
+const rc=i=>RC[i%RC.length];
+// جدول‌های اصلی: بیشترین ارتباط را دارند و کل سیستم دور آن‌ها می‌چرخد
+const CORE=['USER','PROPERTY','UNIT','BOOKING'];
+const sizeOf=k=>CORE.includes(k)?[170,60]:[BW,BH];
+// اگر دو جدول بیش از یک رابطه داشته باشند (مثل فرستنده و گیرنده پیام)، خط‌ها موازی و کنار هم کشیده می‌شوند
+const pairCount={},pairSeen={};
+R.forEach(([a,b])=>{const k=[a,b].sort().join('|');pairCount[k]=(pairCount[k]||0)+1});
+const edges=R.map(([a,b,ca,cb,lbl],i)=>{
+  const A0=E[a],B0=E[b],dx=B0.x-A0.x,dy=B0.y-A0.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+  const pk=[a,b].sort().join('|'),idx=pairSeen[pk]=(pairSeen[pk]??-1)+1,off=(idx-(pairCount[pk]-1)/2)*16;
+  const A={x:A0.x-uy*off,y:A0.y+ux*off},B={x:B0.x-uy*off,y:B0.y+ux*off};
+  const g=S('g',{class:'edge'});g.style.setProperty('--rc',rc(i));
+  g.append(S('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y}));g.style.setProperty('--len',L);g.style.setProperty('--i',i);
+  // برچسب کاردینالیتی درست بیرون لبه جعبه می‌نشیند، نه زیر آن (جعبه‌های اصلی بزرگ‌ترند)
+  const pt=(k,sx,sy,s,t)=>{
+    const [w,h]=sizeOf(k),hit=Math.min(w/2/(Math.abs(ux)||1e-6),h/2/(Math.abs(uy)||1e-6));
+    const o=Math.min(hit+32,L/2-4);
+    return S('text',{x:sx+s*ux*o-uy*14,y:sy+s*uy*o+ux*14+5},t)};
+  // برچسب‌ها در لایه‌ای بالاتر از جعبه‌ها می‌نشینند تا هرگز زیر آن‌ها نروند
+  const lab=S('g',{class:'edge elab'});lab.style.setProperty('--rc',rc(i));
+  lab.append(pt(a,A.x,A.y,1,ca),pt(b,B.x,B.y,-1,cb));
+  gE.append(g);gL.append(lab);
+  const both={classList:{toggle:(c,on)=>{g.classList.toggle(c,on);lab.classList.toggle(c,on)},remove:(...c)=>{g.classList.remove(...c);lab.classList.remove(...c)}}};
+  return {a,b,g:both,lbl,c:rc(i)};
+});
+const nodes={};
+Object.keys(E).forEach((k,ix)=>{
+  const e=E[k];
+  const core=CORE.includes(k),w=core?170:BW,h=core?60:BH;
+  const g=S('g',{class:'node'+(core?' core':''),style:`--c:${col(k)};--i:${ix}`,tabindex:0,role:'button'});
+  g.append(S('rect',{x:e.x-w/2,y:e.y-h/2,width:w,height:h,rx:14}),
+           S('text',{class:'fa',x:e.x,y:e.y-(core?1:2)},e.fa),
+           S('text',{class:'en',x:e.x,y:e.y+(core?19:14)},k));
+  if(core)g.append(S('circle',{class:'badge',cx:e.x+w/2-4,cy:e.y-h/2+4,r:11}),S('text',{class:'star',x:e.x+w/2-4,y:e.y-h/2+9},'★'));
+  g.onclick=()=>select(k); g.onkeydown=ev=>{if(ev.key==='Enter')select(k)};
+  gN.append(g); nodes[k]=g;
+});
+Object.entries(DOM).forEach(([id,d])=>$('#legend').append(el('span',{},`<i style="background:${d.c}"></i>${d.fa}`)));
+$('#legend').append(el('span',{class:'coreKey'},'★ جدول اصلی (بیشترین ارتباط)'));
+
+let selected=null;
+function select(k){
+  selected=k; svg.classList.add('dim');
+  const rel=new Set([k]);
+  edges.forEach(ed=>{const on=ed.a===k||ed.b===k;ed.g.classList.toggle('hl',on);if(on){rel.add(ed.a);rel.add(ed.b)}});
+  Object.entries(nodes).forEach(([n,g])=>{g.classList.toggle('sel',n===k);g.classList.toggle('rel',rel.has(n))});
+  const e=E[k];
+  const list=edges.filter(ed=>ed.a===k||ed.b===k).map(ed=>{const o=ed.a===k?ed.b:ed.a;return `<button class="rel-btn" data-k="${o}" style="border-inline-start:6px solid ${ed.c}"><span>${ed.lbl}</span><b>${E[o].fa} · <bdi dir="ltr">${o}</bdi></b></button>`}).join('');
+  $('#side').innerHTML=`<h3 style="color:${col(k)}">${e.fa}</h3><div class="en">${k}</div><p>${e.desc}</p>${fieldsTable(k)}<div class="rels">${list}</div>`;
+  const sd=$('#side');sd.classList.remove('swap');[...sd.children].forEach((c,i)=>c.style.setProperty('--j',i));void sd.offsetWidth;sd.classList.add('swap');
+  $('#side').querySelectorAll('.rel-btn').forEach(b=>b.onclick=()=>select(b.dataset.k));
+}
+function clearSel(){selected=null;svg.classList.remove('dim');edges.forEach(e=>e.g.classList.remove('hl'));Object.values(nodes).forEach(g=>g.classList.remove('sel','rel'));$('#side').innerHTML=hint;$('#side').classList.remove('swap')}
+const hint='<div class="hint"><span>👈</span><br>یک جدول را در نمودار انتخاب کنید<br>تا فیلدها و رابطه‌هایش اینجا نمایش داده شود.</div>';
+$('#side').innerHTML=hint;
+svg.addEventListener('click',e=>{if(e.target===svg)clearSel()});
+
+/* ---------- جدول‌ها و فیلدها ---------- */
+Object.entries(DOM).forEach(([id,d])=>{
+  const t=el('button',{class:'tab','data-id':id,style:`--c:${d.c}`},d.fa); t.onclick=()=>setTab(id); $('#tabs').append(t);
+});
+function setTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.id===id));
+  const c=DOM[id].c; $('#entCards').innerHTML='';
+  Object.keys(E).filter(k=>E[k].dom===id).forEach(k=>{
+    const card=el('div',{class:'card ent-card',style:`--c:${c}`},`<h4>${E[k].fa}<small>${k}</small></h4><p>${E[k].desc}</p>${fieldsTable(k)}<button class="chip" style="--c:${c};margin-top:10px">نمایش در نمودار ↗</button>`);
+    card.querySelector('button').onclick=()=>{go(2);select(k)};
+    card.style.animation='rise .55s cubic-bezier(.2,.8,.2,1) backwards';card.style.animationDelay=($('#entCards').children.length*80)+'ms';
+    $('#entCards').append(card);
+  });
+}
+setTab('user');
+
+/* ---------- انواع رابطه ---------- */
+// هر نوع: نقطه‌های سمت راست (والد) و چپ (فرزند) و یال‌ها [از، به]
+const RT=[
+ {k:'۱ : ۱',n:'یک‌به‌یک',c:'#5b8def',L:2,Rn:2,e:[[0,0],[1,1]],
+  d:'هر ردیف جدول اول فقط با یک ردیف جدول دوم مرتبط است و برعکس.',
+  ex:'نمونه: یک شخص ⟷ یک پروفایل یا شناسنامه. در این پروژه ساده‌ترین شکل آن رابطه رزرو و نظر است که هر رزرو حداکثر یک نظر دارد (۱ : ۰..۱).',
+  tip:'پیاده‌سازی: کلید خارجی با قید یکتا (UK).'},
+ {k:'۱ : N',n:'یک‌به‌چند',c:'#38a169',L:1,Rn:3,e:[[0,0],[0,1],[0,2]],
+  d:'یک ردیف از جدول والد می‌تواند با چند ردیف فرزند مرتبط باشد، اما هر فرزند فقط یک والد دارد.',
+  ex:'نمونه: یک کاربر ⟶ چند رزرو؛ یک اقامتگاه ⟶ چند واحد؛ یک رزرو ⟶ چند پرداخت. رایج‌ترین رابطه در این ERD است.',
+  tip:'پیاده‌سازی: کلید خارجی در جدول سمت N.'},
+ {k:'N : M',n:'چند‌به‌چند',c:'#d66ba0',L:3,Rn:3,e:[[0,0],[0,1],[1,1],[1,2],[2,0],[2,2]],
+  d:'هر ردیف جدول اول می‌تواند با چند ردیف جدول دوم مرتبط باشد و برعکس. مستقیم قابل ذخیره نیست.',
+  ex:'نمونه: اقامتگاه ⟷ امکانات (هر ویلا چند امکان دارد و هر امکان در چند ویلا هست)؛ کاربر ⟷ اقامتگاه‌های ذخیره‌شده در فهرست علاقه‌مندی.',
+  tip:'پیاده‌سازی: شکستن به دو رابطه ۱ : N با جدول واسط (PROPERTY_AMENITY و WISHLIST_ITEM).'},
+ {k:'۰..۱',n:'اختیاری',c:'#e6a23c',L:1,Rn:2,e:[[0,0]],opt:1,
+  d:'حضور رابطه اجباری نیست؛ ممکن است ردیف طرف مقابل وجود نداشته باشد (مقدار NULL).',
+  ex:'نمونه: کد تخفیف در رزرو (همه رزروها کد ندارند)؛ پیام می‌تواند به رزرو وصل نباشد؛ عکس می‌تواند مربوط به واحد خاصی نباشد.',
+  tip:'پیاده‌سازی: کلید خارجی nullable.'},
+];
+function rtSvg(t){
+  const W=190,H=96,xr=34,xl=156,ys=n=>n===1?[48]:n===2?[28,68]:[16,48,80];
+  const yr=ys(t.L),yl=ys(t.Rn);
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="max-width:230px;margin:0 auto 8px">`;
+  t.e.forEach(([a,b],i)=>{s+=`<line x1="${xr}" y1="${yr[a]}" x2="${xl}" y2="${yl[b]}" stroke="${t.c}" stroke-width="2.2" ${t.opt?'stroke-dasharray="6 5"':''} style="stroke-dasharray:${t.opt?'6 5':'200'};stroke-dashoffset:0;animation:${t.opt?'march .9s linear infinite':`draw .8s ${i*.12}s ease-out backwards`};--len:200"/>`});
+  yr.forEach(y=>s+=`<circle cx="${xr}" cy="${y}" r="9" fill="${t.c}"/>`);
+  yl.forEach(y=>s+=`<circle cx="${xl}" cy="${y}" r="9" fill="var(--panel)" stroke="${t.c}" stroke-width="3"/>`);
+  return s+'</svg>';
+}
+RT.forEach(t=>{
+  $('#rtypes').append(el('div',{class:'card',style:`border-top:5px solid ${t.c}`},
+   rtSvg(t)+`<h3 style="color:${t.c};display:flex;justify-content:space-between;align-items:baseline"><span>${t.n}</span><span class="card-pill" style="color:${t.c}">${t.k}</span></h3>
+   <p class="sub" style="font-size:16px;margin:6px 0">${t.d}</p>
+   <p class="sub" style="font-size:15px;margin:6px 0">${t.ex}</p>
+   <p style="font-size:14px;color:${t.c};font-weight:700">${t.tip}</p>`));
+});
+
+/* ---------- جدول رابطه‌ها ---------- */
+let relFilter='all';
+// نمایش کوچک رابطه: یک نقطه توپر (والد) به یک یا چند نقطه توخالی (فرزند)
+function miniRel(cb,c){
+  const many=cb==='N',ys=many?[6,18,30]:[18];
+  return `<svg viewBox="0 0 70 36" width="70" height="36" aria-hidden="true">`+
+    ys.map(y=>`<line x1="10" y1="18" x2="60" y2="${y}" stroke="${c}" stroke-width="2.2" ${many?'':'stroke-dasharray="5 4"'}/><circle cx="60" cy="${y}" r="5" fill="var(--panel)" stroke="${c}" stroke-width="2.5"/>`).join('')+
+    `<circle cx="10" cy="18" r="6.5" fill="${c}"/></svg>`;
+}
+function drawRels(q=''){
+  q=q.trim().toLowerCase();
+  const body=$('#relBody');body.innerHTML='';let n=0;
+  R.forEach(([a,b,ca,cb,l],ri)=>{
+    if(relFilter!=='all'&&cb!==relFilter)return;
+    if(q&&!(a+b+E[a].fa+E[b].fa+l).toLowerCase().includes(q))return;
+    n++;
+    const A=E[a].fa,B=E[b].fa,many=cb==='N';
+    const sent=many
+      ? `هر <b>${A}</b> می‌تواند چند <b>${B}</b> داشته باشد، اما هر <b>${B}</b> فقط به یک <b>${A}</b> تعلق دارد.`
+      : `هر <b>${A}</b> حداکثر یک <b>${B}</b> دارد و ممکن است هیچ‌کدام نداشته باشد.`;
+    const tr=el('tr',{style:'cursor:pointer',tabindex:0},
+      `<td class="ent${CORE.includes(a)?' core':''}" style="--c:${col(a)}"><b>${A}</b><bdi class="en">${a}</bdi></td>
+       <td><div class="rcell" title="رنگ این رابطه در نمودار">${miniRel(cb,rc(ri))}<span class="rline" style="background:${rc(ri)}"></span><b>${many?'یک‌به‌چند':'یک‌به‌یک (اختیاری)'}</b><span class="card-pill">${ca} : ${cb}</span></div></td>
+       <td class="ent${CORE.includes(b)?' core':''}" style="--c:${col(b)}"><b>${B}</b><bdi class="en">${b}</bdi></td>
+       <td><span class="meaning">${l}</span><span class="sent">${sent}</span></td>`);
+    tr.onclick=()=>{go(2);select(a)};
+    tr.onkeydown=e=>{if(e.key==='Enter')tr.onclick()};
+    body.append(tr);
+  });
+  $('#rempty').hidden=n>0;
+}
+drawRels();
+$('#search').oninput=e=>drawRels(e.target.value);
+document.querySelectorAll('.rf').forEach(b=>b.onclick=()=>{
+  relFilter=b.dataset.f;
+  document.querySelectorAll('.rf').forEach(x=>x.classList.toggle('on',x===b));
+  drawRels($('#search').value);
+});
+
+/* ---------- مسیر رزرو ---------- */
+FLOW.forEach((s,i)=>{
+  const b=el('button',{class:'step'},`<span class="n">${(i+1).toLocaleString('fa')}</span>${s.t}`);
+  b.onclick=()=>setStep(i); $('#flow').append(b);
+});
+function setStep(i){
+  document.querySelectorAll('.step').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const s=FLOW[i];
+  $('#flowInfo').innerHTML=`<h3>${s.t}</h3><p>${s.p}</p><div class="chips">${s.tb.map(t=>`<button class="chip" style="--c:${col(t)}" data-k="${t}">${E[t].fa} · <bdi dir="ltr">${t}</bdi></button>`).join('')}</div>`;
+  const fi=$('#flowInfo');fi.classList.remove('swap');[...fi.children].forEach((c,i)=>c.style.setProperty('--j',i));void fi.offsetWidth;fi.classList.add('swap');
+  $('#flowInfo').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{go(2);select(c.dataset.k)});
+}
+setStep(0);
+
+go(Math.max(0,(parseInt(location.hash.slice(1))||1)-1));
+</script>
+</body>
+</html>

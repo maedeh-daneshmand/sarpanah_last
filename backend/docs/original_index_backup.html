@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لسلز وی‌پی‌ان | خرید کانفیگ و فیلترشکن پرسرعت و امن</title>
+  
+  <!-- Google Fonts: Vazirmatn -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            vazirmatn: ['Vazirmatn', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#F53838',
+              hover: '#E12828',
+              light: '#FFECEC',
+              border: '#F53838',
+            },
+            dark: '#0B132A',
+            muted: '#4F5665',
+          },
+          boxShadow: {
+            'brand-glow': '0 16px 30px rgba(245, 56, 56, 0.35)',
+            'brand-soft': '0 10px 25px -5px rgba(245, 56, 56, 0.2)',
+            'card-elevated': '0 25px 50px -12px rgba(11, 19, 42, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #0B132A;
+      background-color: #FFFFFF;
+      direction: rtl;
+      text-align: right;
+      overflow-x: hidden;
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
+  <!-- React 18 & Babel for JSX -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useRef } = React;
+
+    // --- NAVBAR ---
+    function Navbar() {
+      const [isOpen, setIsOpen] = useState(false);
+      const navLinks = [
+        { label: 'درباره ما', href: '#about' },
+        { label: 'امکانات', href: '#features' },
+        { label: 'تعرفه‌ها', href: '#pricing' },
+        { label: 'نظرات مشتریان', href: '#testimonials' },
+        { label: 'راهنما', href: '#help' }
+      ];
+
+      return (
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md transition-all duration-200 border-b border-gray-100 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-20">
+              
+              {/* Logo */}
+              <a href="#" className="flex items-center gap-2.5 group">
+                <svg
+                  width="35"
+                  height="35"
+                  viewBox="0 0 35 36"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="transition-transform duration-200 group-hover:scale-105"
+                >
+                  <path
+                    d="M17.5 2C17.5 2 7 12 7 21C7 26.799 11.701 31.5 17.5 31.5C23.299 31.5 28 26.799 28 21C28 12 17.5 2 17.5 2ZM17.5 28C14.186 28 11.5 25.314 11.5 22C11.5 18 15 14 17.5 10C20 14 23.5 18 23.5 22C23.5 25.314 20.814 28 17.5 28Z"
+                    fill="#F53838"
+                  />
+                </svg>
+                <span className="text-xl font-bold tracking-tight text-dark">
+                  <span className="font-extrabold text-[#0B132A]">Lasles</span>
+                  <span className="font-medium text-[#0B132A]">VPN</span>
+                  <span className="text-xs font-normal text-muted mr-2">| لسلز وی‌پی‌ان</span>
+                </span>
+              </a>
+
+              {/* Desktop Menu */}
+              <nav className="hidden md:flex items-center space-x-8 space-x-reverse">
+                {navLinks.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="text-muted text-base hover:text-brand transition duration-200 font-normal hover:font-medium"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Desktop Auth */}
+              <div className="hidden md:flex items-center space-x-6 space-x-reverse">
+                <a
+                  href="#signin"
+                  className="font-bold text-dark hover:text-brand transition duration-200 text-base"
+                >
+                  ورود
+                </a>
+                <a
+                  href="#signup"
+                  className="border-2 border-brand text-brand font-bold text-base px-9 py-2.5 rounded-full hover:bg-brand hover:text-white transition duration-300 hover:shadow-[0_8px_20px_rgba(245,56,56,0.25)]"
+                >
+                  ثبت‌نام
+                </a>
+              </div>
+
+              {/* Mobile Hamburger */}
+              <div className="md:hidden flex items-center">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="p-2 text-dark hover:text-brand focus:outline-none"
+                  aria-label="منوی موبایل"
+                >
+                  {isOpen ? (
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  ) : (
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Mobile Dropdown */}
+          {isOpen && (
+            <div className="md:hidden bg-white border-b border-gray-100 px-6 py-6 space-y-4 shadow-xl text-right">
+              {navLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block text-base font-medium text-muted hover:text-brand"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <div className="pt-4 border-t border-gray-100 flex flex-col gap-3">
+                <a
+                  href="#signin"
+                  className="text-center font-bold text-dark py-2 hover:text-brand"
+                >
+                  ورود
+                </a>
+                <a
+                  href="#signup"
+                  className="text-center border-2 border-brand text-brand font-bold py-2.5 rounded-full hover:bg-brand hover:text-white transition"
+                >
+                  ثبت‌نام
+                </a>
+              </div>
+            </div>
+          )}
+        </header>
+      );
+    }
+
+    // --- HERO SECTION ---
+    function Hero() {
+      return (
+        <section id="about" className="relative pt-12 pb-20 lg:pt-16 lg:pb-28 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center">
+              
+              {/* Text Column in RTL */}
+              <div className="space-y-6 text-center lg:text-right">
+                <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold text-dark leading-[1.3] tracking-tight">
+                  با <span className="font-extrabold text-dark">لسلز وی‌پی‌ان</span>،
+                  <br />
+                  همه چیز ساده و امن است.
+                </h1>
+                <p className="text-muted text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal">
+                  شبکه‌ای پرسرعت و پایدار برای تمام نیازهای اینترنتی شما؛ اینترنت آزاد، بدون فیلترینگ و با بالاترین سطح امنیت را با لسلز وی‌پی‌ان تجربه کنید.
+                </p>
+                <div className="pt-4">
+                  <a
+                    href="#pricing"
+                    className="inline-block bg-brand hover:bg-brand-hover text-white font-bold text-base px-16 py-4 rounded-xl shadow-brand-glow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
+                  >
+                    شروع کنید
+                  </a>
+                </div>
+              </div>
+
+              {/* Illustration Column in RTL matching Landingpage.png */}
+              <div className="relative flex justify-center lg:justify-start">
+                <div className="relative w-full max-w-[560px]">
+                  <svg viewBox="0 0 620 480" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-sm select-none">
+                    <defs>
+                      <filter id="hShadow" x="-15%" y="-15%" width="135%" height="145%">
+                        <feDropShadow dx="0" dy="12" stdDeviation="10" floodColor="#0B132A" floodOpacity="0.08" />
+                      </filter>
+                      <linearGradient id="hShirt" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#F85C5C" />
+                        <stop offset="100%" stopColor="#F53838" />
+                      </linearGradient>
+                      <linearGradient id="hLaptop" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#FFFFFF" />
+                        <stop offset="100%" stopColor="#E2E8F0" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Ambient pastel background blob */}
+                    <path
+                      d="M260 90C360 40 500 50 560 140C620 230 570 340 480 390C390 440 280 430 230 360C180 290 160 140 260 90Z"
+                      fill="#FFF5F5"
+                      opacity="0.8"
+                    />
+
+                    {/* Floating Card: Padlock (Top Left) */}
+                    <g filter="url(#hShadow)">
+                      <rect x="75" y="45" width="58" height="58" rx="16" fill="#FFF2F2" />
+                      <path
+                        d="M98 68V64C98 60.6863 100.686 58 104 58C107.314 58 110 60.6863 110 64V68"
+                        stroke="#F53838"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      <rect x="94" y="68" width="20" height="15" rx="3.5" fill="#F53838" />
+                      <circle cx="104" cy="74.5" r="1.8" fill="#FFFFFF" />
+                      <line x1="104" y1="76" x2="104" y2="79" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+                    </g>
+
+                    {/* Floating Card: Play Triangle (Top Right) */}
+                    <g filter="url(#hShadow)">
+                      <rect x="420" y="50" width="54" height="54" rx="16" fill="#FFF2F2" />
+                      <polygon points="443,67 455,77 443,87" fill="#F53838" />
+                    </g>
+
+                    {/* Floating Card: Netflix 'N' (Center Left) */}
+                    <g filter="url(#hShadow)">
+                      <rect x="135" y="145" width="46" height="46" rx="12" fill="#FFF2F2" />
+                      <path
+                        d="M151 157V179M151 157L165 179M165 157V179"
+                        stroke="#F53838"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </g>
+
+                    {/* Floating Card: Bar Chart Widget (Right) */}
+                    <g filter="url(#hShadow)">
+                      <rect x="480" y="140" width="68" height="54" rx="14" fill="#FFFFFF" />
+                      <rect x="495" y="162" width="6" height="18" rx="3" fill="#2FAB73" opacity="0.8" />
+                      <rect x="506" y="152" width="6" height="28" rx="3" fill="#FEA250" />
+                      <rect x="517" y="168" width="6" height="12" rx="3" fill="#F53838" opacity="0.6" />
+                      <rect x="528" y="156" width="6" height="24" rx="3" fill="#2FAB73" />
+                    </g>
+
+                    {/* Ceramic Coffee Mug (Left side) */}
+                    <g>
+                      <rect x="70" y="305" width="34" height="42" rx="6" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="2" />
+                      <path d="M104 314C114 314 114 336 104 336" stroke="#E2E8F0" strokeWidth="3" fill="none" strokeLinecap="round" />
+                      <path d="M78 295C78 288 84 288 84 281" stroke="#CBD5E1" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6" />
+                      <path d="M87 298C87 289 93 289 93 280" stroke="#CBD5E1" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6" />
+                    </g>
+
+                    {/* Modern Desk Lamp (Right side) */}
+                    <g>
+                      <rect x="510" y="340" width="65" height="10" rx="5" fill="#1E293B" />
+                      <rect x="546" y="245" width="6" height="100" rx="3" fill="#1E293B" />
+                      <circle cx="549" cy="245" r="7" fill="#334155" />
+                      <line x1="549" y1="245" x2="495" y2="185" stroke="#1E293B" strokeWidth="6" strokeLinecap="round" />
+                      <circle cx="495" cy="185" r="6" fill="#334155" />
+                      <g transform="translate(470, 165) rotate(-35)">
+                        <path d="M0 10L35 0L42 28L7 38Z" fill="#1E293B" />
+                        <ellipse cx="6" cy="24" rx="7" ry="15" fill="#F8FAFC" />
+                        <polygon points="0,24 -70,120 40,150" fill="#FEF08A" opacity="0.12" />
+                      </g>
+                    </g>
+
+                    {/* CHARACTER */}
+                    <path d="M210 350C210 260 250 220 310 220C370 220 410 260 410 350L195 350Z" fill="url(#hShirt)" />
+                    <path d="M285 220C285 240 335 240 335 220" stroke="#D32F2F" strokeWidth="5" fill="#FDBCB4" strokeLinecap="round" />
+                    
+                    {/* Left Arm (Gesturing Welcomingly) */}
+                    <path d="M375 250C420 270 450 250 470 215" stroke="url(#hShirt)" strokeWidth="28" strokeLinecap="round" fill="none" />
+                    <g transform="translate(465, 195)">
+                      <path d="M0 16C5 12 12 8 20 12C24 14 26 20 22 25C18 30 10 32 4 28Z" fill="#FDBCB4" />
+                      <path d="M12 10C16 6 22 8 23 12" stroke="#FDBCB4" strokeWidth="4" strokeLinecap="round" />
+                      <path d="M18 12C24 9 28 12 28 16" stroke="#FDBCB4" strokeWidth="4" strokeLinecap="round" />
+                      <path d="M18 17C23 16 27 18 26 22" stroke="#FDBCB4" strokeWidth="4" strokeLinecap="round" />
+                    </g>
+
+                    {/* Right Arm */}
+                    <path d="M245 250C230 280 235 320 270 340" stroke="url(#hShirt)" strokeWidth="26" strokeLinecap="round" fill="none" />
+                    <rect x="250" y="325" width="18" height="12" rx="3" fill="#1E293B" transform="rotate(25, 250, 325)" />
+                    <ellipse cx="275" cy="342" rx="12" ry="9" fill="#FDBCB4" />
+
+                    {/* Head & Features */}
+                    <rect x="295" y="185" width="30" height="35" rx="5" fill="#FDBCB4" />
+                    <ellipse cx="310" cy="160" rx="32" ry="36" fill="#FDBCB4" />
+                    <path d="M275 160C275 118 290 105 315 105C345 105 350 125 348 160C342 145 330 135 310 135C292 135 282 142 275 160Z" fill="#1E293B" />
+                    
+                    {/* Headset (Cyan) */}
+                    <path d="M272 165C270 120 285 102 312 102C338 102 352 120 350 165" stroke="#0EA5E9" strokeWidth="6" fill="none" strokeLinecap="round" />
+                    <rect x="266" y="150" width="12" height="26" rx="6" fill="#FFFFFF" stroke="#0EA5E9" strokeWidth="3" />
+                    <rect x="344" y="150" width="12" height="26" rx="6" fill="#FFFFFF" stroke="#0EA5E9" strokeWidth="3" />
+                    <path d="M272 172C272 188 285 192 298 192" stroke="#0EA5E9" strokeWidth="3" fill="none" strokeLinecap="round" />
+                    <circle cx="300" cy="192" r="3.5" fill="#1E293B" />
+
+                    {/* Glasses */}
+                    <rect x="286" y="150" width="20" height="15" rx="4" stroke="#1E293B" strokeWidth="3" fill="none" />
+                    <rect x="314" y="150" width="20" height="15" rx="4" stroke="#1E293B" strokeWidth="3" fill="none" />
+                    <line x1="306" y1="156" x2="314" y2="156" stroke="#1E293B" strokeWidth="3" />
+                    <circle cx="296" cy="157" r="2.5" fill="#1E293B" />
+                    <circle cx="324" cy="157" r="2.5" fill="#1E293B" />
+                    <path d="M304 175Q310 182 318 175" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+
+                    {/* Laptop */}
+                    <g filter="url(#hShadow)">
+                      <rect x="270" y="275" width="135" height="85" rx="7" fill="url(#hLaptop)" stroke="#CBD5E1" strokeWidth="2" />
+                      <circle cx="337" cy="315" r="7" fill="#FFFFFF" opacity="0.9" />
+                      <path d="M245 358L425 358L405 368L265 368Z" fill="#94A3B8" />
+                    </g>
+
+                    <line x1="50" y1="358" x2="590" y2="358" stroke="#F1F5F9" strokeWidth="4" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // --- STATS BAR ---
+    function Stats() {
+      const statItems = [
+        {
+          num: '+۹۰',
+          label: 'کاربر فعال',
+          icon: (
+            <svg className="w-6 h-6 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          )
+        },
+        {
+          num: '+۳۰',
+          label: 'لوکیشن جهانی',
+          icon: (
+            <svg className="w-6 h-6 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          )
+        },
+        {
+          num: '+۵۰',
+          label: 'سرور اختصاصی',
+          icon: (
+            <svg className="w-6 h-6 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M4 6h16v4H4V6zm0 8h16v4H4v-4zm2-6h2V7H6v1zm0 8h2v-1H6v1z"/>
+            </svg>
+          )
+        }
+      ];
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-10 sm:-mt-12">
+          <div className="bg-white rounded-2xl shadow-card-elevated border border-gray-100 py-6 px-6 sm:px-12 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-gray-200">
+            {statItems.map((item, idx) => (
+              <div key={idx} className="flex items-center justify-center md:justify-start gap-6 py-4 md:py-2 md:px-8">
+                <div className="w-14 h-14 rounded-full bg-brand-light flex items-center justify-center flex-shrink-0">
+                  {item.icon}
+                </div>
+                <div className="text-right">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-dark tracking-tight">
+                    {item.num}
+                  </h3>
+                  <p className="text-muted text-base font-normal mt-0.5">
+                    {item.label}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // --- FEATURES SECTION ---
+    function Features() {
+      const featureList = [
+        'حفاظت آنلاین قدرتمند و رمزنگاری پیشرفته',
+        'اینترنت آزاد، بدون مرز و فیلترینگ',
+        'سرورهای توربو با پینگ پایین و سرعت فوق‌العاده',
+        'بدون محدودیت زمانی، حجمی یا کاهش سرعت'
+      ];
+
+      return (
+        <section id="features" className="py-24 lg:py-32 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              
+              {/* Left in RTL: Illustration matching Landingpage.png */}
+              <div className="flex justify-center order-2 lg:order-1">
+                <div className="relative w-full max-w-[500px]">
+                  <svg viewBox="0 0 520 420" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-sm select-none">
+                    <defs>
+                      <linearGradient id="fShirt" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#F85C5C" />
+                        <stop offset="100%" stopColor="#F53838" />
+                      </linearGradient>
+                      <linearGradient id="fLaptop" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#FFFFFF" />
+                        <stop offset="100%" stopColor="#E2E8F0" />
+                      </linearGradient>
+                      <filter id="fShadow" x="-10%" y="-10%" width="125%" height="135%">
+                        <feDropShadow dx="0" dy="10" stdDeviation="8" floodColor="#0B132A" floodOpacity="0.06" />
+                      </filter>
+                    </defs>
+
+                    <ellipse cx="260" cy="240" rx="190" ry="140" fill="#FFF5F5" opacity="0.6" />
+
+                    {/* Sparkles, crosses, stars and dots */}
+                    <g fill="#FEA250">
+                      <path d="M120 180Q120 190 110 190Q120 190 120 200Q120 190 130 190Q120 190 120 180Z" />
+                      <path d="M420 140Q420 150 410 150Q420 150 420 160Q420 150 430 150Q420 150 420 140Z" />
+                      <path d="M380 280Q380 290 370 290Q380 290 380 300Q380 290 390 290Q380 290 380 280Z" />
+                    </g>
+                    <g fill="#F53838">
+                      <path d="M160 140Q160 150 150 150Q160 150 160 160Q160 150 170 150Q160 150 160 140Z" />
+                      <path d="M390 200Q390 210 380 210Q390 210 390 220Q390 210 400 210Q390 210 390 200Z" />
+                      <path d="M138 240H146M142 236V244" stroke="#F53838" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M410 240H418M414 236V244" stroke="#FEA250" strokeWidth="2.5" strokeLinecap="round" />
+                    </g>
+                    <circle cx="170" cy="220" r="3.5" fill="#FEA250" />
+                    <circle cx="105" cy="225" r="2.5" fill="#F53838" opacity="0.6" />
+                    <circle cx="370" cy="170" r="3" fill="#F53838" opacity="0.7" />
+                    <circle cx="440" cy="185" r="2.5" fill="#FEA250" />
+                    <circle cx="455" cy="235" r="3.5" fill="#F53838" opacity="0.5" />
+
+                    {/* Character */}
+                    <path d="M190 330C190 255 220 225 270 225C320 225 350 255 350 330Z" fill="url(#fShirt)" />
+                    <path d="M250 225C250 242 290 242 290 225" stroke="#D32F2F" strokeWidth="4" fill="#FDBCB4" strokeLinecap="round" />
+
+                    {/* Arms */}
+                    <path d="M205 250C185 275 190 310 225 320" stroke="url(#fShirt)" strokeWidth="24" strokeLinecap="round" fill="none" />
+                    <ellipse cx="230" cy="324" rx="10" ry="8" fill="#FDBCB4" />
+
+                    <path d="M325 250C365 265 390 245 410 215" stroke="url(#fShirt)" strokeWidth="24" strokeLinecap="round" fill="none" />
+                    <g transform="translate(405, 195)">
+                      <path d="M0 15C4 11 10 7 18 10C22 12 24 18 20 23C16 28 8 30 2 26Z" fill="#FDBCB4" />
+                      <path d="M10 8C14 5 19 6 20 10" stroke="#FDBCB4" strokeWidth="3.5" strokeLinecap="round" />
+                      <path d="M15 10C20 7 24 10 24 14" stroke="#FDBCB4" strokeWidth="3.5" strokeLinecap="round" />
+                    </g>
+
+                    {/* Head */}
+                    <rect x="257" y="195" width="26" height="32" rx="4" fill="#FDBCB4" />
+                    <ellipse cx="270" cy="172" rx="28" ry="32" fill="#FDBCB4" />
+                    <path d="M240 172C240 135 252 122 275 122C300 122 305 140 304 172C298 158 288 150 270 150C255 150 246 156 240 172Z" fill="#1E293B" />
+                    
+                    {/* Headset (Cyan) */}
+                    <path d="M238 175C236 135 248 120 272 120C295 120 307 135 305 175" stroke="#0EA5E9" strokeWidth="5" fill="none" strokeLinecap="round" />
+                    <rect x="233" y="162" width="10" height="22" rx="5" fill="#FFFFFF" stroke="#0EA5E9" strokeWidth="2.5" />
+                    <rect x="300" y="162" width="10" height="22" rx="5" fill="#FFFFFF" stroke="#0EA5E9" strokeWidth="2.5" />
+                    <path d="M238 180C238 194 250 197 262 197" stroke="#0EA5E9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                    <circle cx="264" cy="197" r="3" fill="#1E293B" />
+
+                    {/* Glasses & face */}
+                    <rect x="248" y="162" width="18" height="14" rx="3.5" stroke="#1E293B" strokeWidth="2.5" fill="none" />
+                    <rect x="274" y="162" width="18" height="14" rx="3.5" stroke="#1E293B" strokeWidth="2.5" fill="none" />
+                    <line x1="266" y1="168" x2="274" y2="168" stroke="#1E293B" strokeWidth="2.5" />
+                    <circle cx="257" cy="168" r="2.2" fill="#1E293B" />
+                    <circle cx="283" cy="168" r="2.2" fill="#1E293B" />
+                    <path d="M264 186Q270 192 278 186" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+
+                    {/* Laptop */}
+                    <g filter="url(#fShadow)">
+                      <rect x="230" y="270" width="120" height="75" rx="6" fill="url(#fLaptop)" stroke="#CBD5E1" strokeWidth="2" />
+                      <circle cx="290" cy="305" r="6" fill="#FFFFFF" opacity="0.9" />
+                      <path d="M210 345L370 345L350 354L230 354Z" fill="#94A3B8" />
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Right in RTL: Copy & Feature List */}
+              <div className="space-y-6 text-right order-1 lg:order-2">
+                <h2 className="text-3xl sm:text-4xl font-bold text-dark leading-snug">
+                  امکانات متعددی که
+                  <br />
+                  در اختیارتان می‌گذاریم
+                </h2>
+                <p className="text-muted text-base leading-relaxed">
+                  با امکانات پیشرفته و زیرساخت پایدار لسلز وی‌پی‌ان، آزادانه و با بالاترین سرعت در اینترنت به گشت‌وگذار بپردازید و از حریم خصوصی خود لذت ببرید.
+                </p>
+                <div className="space-y-4 pt-2">
+                  {featureList.map((feat, idx) => (
+                    <div key={idx} className="flex items-center gap-4">
+                      <div className="w-6 h-6 rounded-full bg-[#2FAB73] flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                      </div>
+                      <span className="text-muted text-base font-normal">
+                        {feat}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // --- PACKAGE ILLUSTRATION FOR PRICING ---
+    function PlanBox({ level }) {
+      return (
+        <div className="w-40 h-44 flex items-center justify-center my-3 select-none">
+          <svg viewBox="0 0 160 170" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
+            <defs>
+              <linearGradient id={`pBoxFront-${level}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFA654" />
+                <stop offset="100%" stopColor="#EE7C26" />
+              </linearGradient>
+              <linearGradient id={`pBoxSide-${level}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#EE7C26" />
+                <stop offset="100%" stopColor="#C95F12" />
+              </linearGradient>
+              <linearGradient id={`pBoxFlap-${level}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#FFC588" />
+                <stop offset="100%" stopColor="#FFA654" />
+              </linearGradient>
+              <radialGradient id={`pRedSphere-${level}`} cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stopColor="#FF8B8B" />
+                <stop offset="40%" stopColor="#F53838" />
+                <stop offset="100%" stopColor="#C91818" />
+              </radialGradient>
+            </defs>
+
+            {level === 'free' && (
+              <g>
+                <circle cx="80" cy="42" r="7" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="62" cy="50" r="5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="98" cy="48" r="5.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="80" cy="22" r="4" fill="#FEA250" opacity="0.8" />
+                <circle cx="50" cy="36" r="3" fill="#F53838" opacity="0.6" />
+                <circle cx="108" cy="32" r="3.5" fill="#FEA250" opacity="0.7" />
+              </g>
+            )}
+
+            {level === 'standard' && (
+              <g>
+                <circle cx="80" cy="40" r="7.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="60" cy="46" r="5.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="100" cy="44" r="6" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="48" cy="30" r="4.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="112" cy="28" r="5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="80" cy="18" r="4.5" fill="#FEA250" />
+                <circle cx="68" cy="28" r="3.5" fill="#F53838" opacity="0.7" />
+                <circle cx="94" cy="24" r="4" fill="#FEA250" opacity="0.9" />
+                <circle cx="36" cy="42" r="3" fill="#F53838" opacity="0.5" />
+                <circle cx="124" cy="38" r="3" fill="#FEA250" opacity="0.6" />
+              </g>
+            )}
+
+            {level === 'premium' && (
+              <g>
+                <circle cx="80" cy="38" r="8" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="58" cy="44" r="6" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="102" cy="42" r="6.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="42" cy="28" r="5.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="118" cy="26" r="6" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="80" cy="14" r="5" fill="#FEA250" />
+                <circle cx="64" cy="24" r="4.5" fill={`url(#pRedSphere-${level})`} />
+                <circle cx="96" cy="20" r="5" fill="#FEA250" />
+                <circle cx="30" cy="38" r="3.5" fill="#F53838" opacity="0.7" />
+                <circle cx="130" cy="36" r="3.5" fill="#FEA250" opacity="0.8" />
+                <circle cx="52" cy="12" r="3" fill="#FEA250" opacity="0.9" />
+                <circle cx="108" cy="10" r="3.5" fill="#F53838" opacity="0.7" />
+                <circle cx="88" cy="6" r="2.5" fill="#FEA250" />
+                <path d="M45 16L38 12" stroke="#FEA250" strokeWidth="2" strokeLinecap="round" />
+                <path d="M115 14L122 10" stroke="#FEA250" strokeWidth="2" strokeLinecap="round" />
+                <path d="M80 6V1" stroke="#F53838" strokeWidth="2" strokeLinecap="round" />
+              </g>
+            )}
+
+            {/* Box base */}
+            <polygon points="80,55 130,80 80,105 30,80" fill="#78350F" opacity="0.5" />
+            <polygon points="30,80 80,105 80,160 30,135" fill={`url(#pBoxFront-${level})`} />
+            <polygon points="80,105 130,80 130,135 80,160" fill={`url(#pBoxSide-${level})`} />
+            <polygon points="30,80 5,68 45,55 80,68" fill={`url(#pBoxFlap-${level})`} opacity="0.95" />
+            <polygon points="130,80 155,68 115,55 80,68" fill={`url(#pBoxFlap-${level})`} opacity="0.9" />
+            <polygon points="30,80 80,105 65,118 15,92" fill={`url(#pBoxFlap-${level})`} opacity="0.85" />
+            <polygon points="80,105 130,80 145,92 95,118" fill={`url(#pBoxSide-${level})`} opacity="0.95" />
+          </svg>
+        </div>
+      );
+    }
+
+    // --- PRICING SECTION ---
+    function Pricing() {
+      const [selectedPlan, setSelectedPlan] = useState(2); // Premium Plan by default
+
+      const plans = [
+        {
+          name: 'پلن پایه',
+          level: 'free',
+          features: [
+            'پهنای باند نامحدود',
+            'اتصال کاملاً رمزنگاری‌شده',
+            'بدون ثبت گزارش ترافیک (No Logs)',
+            'سازگار با تمام دستگاه‌ها'
+          ],
+          price: 'رایگان',
+          period: ''
+        },
+        {
+          name: 'پلن استاندارد',
+          level: 'standard',
+          features: [
+            'پهنای باند نامحدود',
+            'اتصال کاملاً رمزنگاری‌شده',
+            'بدون ثبت گزارش ترافیک (No Logs)',
+            'سازگار با تمام دستگاه‌ها',
+            'اتصال به سرورهای پرسرعت جهانی'
+          ],
+          price: '$۹',
+          period: ' / ماهانه'
+        },
+        {
+          name: 'پلن پیشرفته (پرمیوم)',
+          level: 'premium',
+          features: [
+            'پهنای باند نامحدود و فوق‌سریع',
+            'اتصال کاملاً رمزنگاری‌شده',
+            'بدون ثبت گزارش ترافیک (No Logs)',
+            'سازگار با تمام دستگاه‌ها',
+            'اتصال به تمام لوکیشن‌های اختصاصی',
+            'دسترسی به سرورهای VIP و آپدیت‌ها'
+          ],
+          price: '$۱۲',
+          period: ' / ماهانه'
+        }
+      ];
+
+      return (
+        <section id="pricing" className="py-24 bg-[#FAFAFB]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-dark leading-snug">
+                پلن مورد نظر خود را انتخاب کنید
+              </h2>
+              <p className="mt-4 text-muted text-base leading-relaxed">
+                بهترین اشتراک را متناسب با نیاز خود برگزینید و از اتصالی امن، فوق‌سریع و بدون محدودیت لذت ببرید.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 items-stretch">
+              {plans.map((p, idx) => {
+                const isSelected = selectedPlan === idx;
+                return (
+                  <div
+                    key={p.name}
+                    onClick={() => setSelectedPlan(idx)}
+                    className={`cursor-pointer bg-white rounded-2xl p-8 sm:p-12 flex flex-col items-center transition-all duration-300 ${
+                      isSelected
+                        ? 'border-2 border-brand shadow-[0_25px_50px_rgba(245,56,56,0.15)] ring-1 ring-brand'
+                        : 'border-2 border-gray-200 hover:border-brand/60 hover:shadow-md'
+                    }`}
+                  >
+                    <PlanBox level={p.level} />
+
+                    <h3 className="text-xl font-bold text-dark mt-4">
+                      {p.name}
+                    </h3>
+
+                    <ul className="mt-8 space-y-4 w-full flex-grow text-right">
+                      {p.features.map((feat, fIdx) => (
+                        <li key={fIdx} className="flex items-center gap-3.5 text-sm sm:text-base text-muted">
+                          <svg className="w-5 h-5 text-[#2FAB73] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                          </svg>
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-12 w-full flex flex-col items-center">
+                      <div className="mb-6 flex items-baseline">
+                        <span className="text-2xl sm:text-3xl font-bold text-dark">
+                          {p.price}
+                        </span>
+                        {p.period && (
+                          <span className="text-muted font-normal text-base mr-1">
+                            {p.period}
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        className={`w-full max-w-[200px] py-3.5 px-8 rounded-full font-bold text-base transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-brand text-white shadow-brand-glow hover:bg-brand-hover hover:shadow-[0_20px_35px_rgba(245,56,56,0.45)] transform hover:-translate-y-0.5'
+                            : 'border-2 border-brand text-brand hover:bg-brand hover:text-white'
+                        }`}
+                      >
+                        انتخاب پلن
+                      </button>
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- NETWORK MAP & SPONSORS ---
+    function Network() {
+      const pinCoords = [
+        [160, 150], [220, 160], [250, 220], [310, 310], [330, 380],
+        [485, 110], [520, 130], [565, 115], [525, 245], [545, 335],
+        [640, 140], [690, 220], [760, 190], [825, 170], [775, 280], [840, 370]
+      ];
+
+      return (
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-dark leading-snug">
+                شبکه جهانی گسترده و فوق‌سریع وی‌پی‌ان
+              </h2>
+              <p className="mt-4 text-muted text-base leading-relaxed">
+                سرورهای اختصاصی <strong className="font-bold text-dark">لسلز وی‌پی‌ان</strong> در سراسر جهان فعال هستند تا در هر نقطه‌ای، به پایدارترین و پرسرعت‌ترین اینترنت دسترسی داشته باشید.
+              </p>
+            </div>
+
+            {/* Clean World Map Silhouette */}
+            <div className="relative w-full max-w-5xl mx-auto my-12">
+              <svg viewBox="0 0 1000 500" className="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#E8ECEF">
+                  <path d="M120,60 Q180,45 240,65 Q260,85 245,120 Q280,140 270,175 Q240,190 220,210 Q240,240 225,250 Q205,240 185,210 Q140,200 110,165 Q85,120 120,60 Z" />
+                  <path d="M300,40 Q340,30 360,50 Q350,80 320,90 Q290,75 300,40 Z" />
+                  <path d="M260,255 Q310,245 350,270 Q370,310 350,360 Q330,420 310,440 Q295,430 290,380 Q270,330 260,285 Z" />
+                  <path d="M460,75 Q520,65 560,85 Q575,125 545,145 Q515,165 475,150 Q450,120 460,75 Z" />
+                  <path d="M465,170 Q555,160 575,200 Q585,260 560,330 Q535,375 510,345 Q480,280 460,230 Q450,195 465,170 Z" />
+                  <path d="M570,75 Q720,50 860,70 Q880,120 830,150 Q860,180 820,220 Q780,250 740,230 Q700,265 670,245 Q640,200 600,190 Q575,150 570,75 Z" />
+                  <path d="M665,205 Q710,210 715,250 Q690,290 670,260 Z" />
+                  <path d="M845,145 Q860,140 855,175 Q840,180 845,145 Z" />
+                  <path d="M740,280 Q780,275 790,300 Q760,320 740,280 Z" />
+                  <path d="M790,305 Q830,300 820,330 Q785,325 790,305 Z" />
+                  <path d="M770,335 Q850,315 885,350 Q880,410 830,425 Q780,415 765,375 Z" />
+                </g>
+
+                {pinCoords.map(([cx, cy], idx) => (
+                  <g key={`pin-${idx}`}>
+                    <circle cx={cx} cy={cy} r="20" fill="#F53838" opacity="0.1"/>
+                    <circle cx={cx} cy={cy} r="12" stroke="#F53838" strokeWidth="1.5" fill="none" opacity="0.4"/>
+                    <circle cx={cx} cy={cy} r="5.5" fill="#FFFFFF"/>
+                    <circle cx={cx} cy={cy} r="4" fill="#F53838"/>
+                  </g>
+                ))}
+              </svg>
+            </div>
+
+            {/* Partner Logos */}
+            <div className="mt-20 flex flex-wrap items-center justify-center gap-12 sm:gap-16 md:gap-24 opacity-60 hover:opacity-90 transition duration-300">
+              <span className="text-2xl sm:text-3xl font-black tracking-widest text-[#AFB5C0] font-sans">
+                NETFLIX
+              </span>
+              <div className="flex items-center gap-2 text-[#AFB5C0]">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-1.464 2.929a.75.75 0 00.999.999l3.072-1.536A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.5 13.5c0 .828-.672 1.5-1.5 1.5-.288 0-.555-.082-.782-.224-1.042.753-2.43 1.224-3.968 1.224s-2.926-.471-3.968-1.224c-.227.142-.494.224-.782.224-.828 0-1.5-.672-1.5-1.5 0-.528.273-.992.686-1.258-.057-.24-.086-.49-.086-.742 0-2.209 2.507-4 5.65-4s5.65 1.791 5.65 4c0 .252-.029.502-.086.742.413.266.686.73.686 1.258z"/>
+                </svg>
+                <span className="text-2xl font-bold tracking-tight">reddit</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-extrabold text-[#AFB5C0] tracking-tight lowercase">
+                amazon
+              </span>
+              <div className="flex items-center gap-2 text-[#AFB5C0]">
+                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                <span className="text-xl sm:text-2xl font-bold tracking-wider">DISCORD</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#AFB5C0]">
+                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                </svg>
+                <span className="text-xl sm:text-2xl font-bold tracking-tight">Spotify</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- TESTIMONIALS SECTION ---
+    function Testimonials() {
+      const [activeIndex, setActiveIndex] = useState(0);
+
+      const items = [
+        {
+          name: 'رضا محمدی (Viezh Robert)',
+          location: 'ورشو، لهستان',
+          rating: '4.5',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=faces',
+          text: '«واقعاً از استفاده از این وی‌پی‌ان شگفت‌زده شدم! سرعت اتصال بسیار بالا است و تا الان هیچ‌گونه قطعی یا افت سرعتی نداشتم. لسلز وی‌پی‌ان همیشه بهترین انتخاب است.»'
+        },
+        {
+          name: 'سارا رضایی (Yessica Christy)',
+          location: 'شانکسی، چین',
+          rating: '4.5',
+          avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop&crop=faces',
+          text: '«من به اقتضای شغلم مسافرت زیادی دارم و همیشه به اتصال پرسرعت بدون قطعی نیازمندم. این کانفیگ‌ها برای استریم و تماس تصویری فوق‌العاده عمل می‌کنند.»'
+        },
+        {
+          name: 'امیرحسین پارسا (Kim Young Jou)',
+          location: 'سئول، کره جنوبی',
+          rating: '4.5',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=faces',
+          text: '«برای کسب‌وکار من که انتقال امن داده‌ها حیاتی است، لسلز وی‌پی‌ان با پروتکل‌های به‌روز و پینگ پایین یک انتخاب بی‌رقیب بوده است.»'
+        }
+      ];
+
+      return (
+        <section id="testimonials" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-dark leading-snug">
+                مورد اعتماد هزاران
+                <br />
+                کاربر راضی و وفادار
+              </h2>
+              <p className="mt-4 text-muted text-base leading-relaxed">
+                داستان‌های رضایت کاربرانی را بخوانید که با خیالی آسوده و سرعتی شگفت‌انگیز از خدمات لسلز وی‌پی‌ان استفاده می‌کنند.
+              </p>
+            </div>
+
+            {/* Testimonial Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {items.map((item, idx) => {
+                const isActive = activeIndex === idx;
+                return (
+                  <div
+                    key={item.name}
+                    onClick={() => setActiveIndex(idx)}
+                    className={`cursor-pointer rounded-2xl p-8 bg-white flex flex-col justify-between transition-all duration-300 ${
+                      isActive
+                        ? 'border-2 border-brand shadow-[0_20px_45px_rgba(245,56,56,0.12)] ring-1 ring-brand'
+                        : 'border-2 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={item.avatar}
+                          alt={item.name}
+                          className="w-12 h-12 rounded-full object-cover border border-gray-100"
+                        />
+                        <div className="text-right">
+                          <h4 className="font-bold text-dark text-lg leading-tight">
+                            {item.name}
+                          </h4>
+                          <p className="text-sm text-gray-400 mt-1">{item.location}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 font-bold text-dark text-sm">
+                        <span>{item.rating}</span>
+                        <svg className="w-4 h-4 text-[#FEA250]" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.176 0l-3.37 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.063 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <p className="text-dark leading-relaxed text-sm sm:text-base text-right">
+                      {item.text}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Navigation Indicators & Buttons (RTL) */}
+            <div className="flex items-center justify-between mt-14">
+              {/* Pagination Dots */}
+              <div className="flex items-center gap-3">
+                {items.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIndex(i)}
+                    className={`rounded-full transition-all duration-300 cursor-pointer ${
+                      activeIndex === i
+                        ? 'w-12 h-3.5 bg-brand'
+                        : 'w-3.5 h-3.5 bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`اسلاید ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              {/* Arrow Controls */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setActiveIndex(Math.max(0, activeIndex - 1))}
+                  disabled={activeIndex === 0}
+                  className={`w-12 h-12 rounded-full border-2 border-brand flex items-center justify-center transition cursor-pointer ${
+                    activeIndex === 0
+                      ? 'opacity-40 cursor-not-allowed text-brand'
+                      : 'text-brand hover:bg-brand hover:text-white'
+                  }`}
+                  aria-label="قبلی"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setActiveIndex(Math.min(items.length - 1, activeIndex + 1))}
+                  disabled={activeIndex === items.length - 1}
+                  className={`w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-brand-soft transition cursor-pointer ${
+                    activeIndex === items.length - 1
+                      ? 'opacity-40 cursor-not-allowed'
+                      : 'hover:bg-brand-hover hover:shadow-[0_12px_25px_rgba(245,56,56,0.45)]'
+                  }`}
+                  aria-label="بعدی"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- SUBSCRIBE FLOATING CARD ---
+    function SubscribeCTA() {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mb-28">
+          <div className="bg-white rounded-2xl shadow-card-elevated border border-gray-100 p-8 sm:p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-right">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dark leading-snug">
+                همین حالا مشترک شوید و
+                <br />
+                از امکانات ویژه لذت ببرید!
+              </h2>
+              <p className="text-muted mt-3 text-sm sm:text-base font-normal">
+                با خرید اشتراک اختصاصی، به اینترنت پرسرعت، امن و بدون فیلتر متصل شوید.
+              </p>
+            </div>
+
+            <div>
+              <a
+                href="#pricing"
+                className="inline-block bg-brand hover:bg-brand-hover text-white font-bold text-base px-16 py-4 rounded-xl shadow-brand-glow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 whitespace-nowrap cursor-pointer"
+              >
+                خرید اشتراک
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- FOOTER ---
+    function Footer() {
+      return (
+        <footer className="bg-[#F8F9FA] pt-44 pb-16 border-t border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16 text-right">
+              
+              {/* Brand Col */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="flex items-center gap-2.5">
+                  <svg
+                    width="35"
+                    height="35"
+                    viewBox="0 0 35 36"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M17.5 2C17.5 2 7 12 7 21C7 26.799 11.701 31.5 17.5 31.5C23.299 31.5 28 26.799 28 21C28 12 17.5 2 17.5 2ZM17.5 28C14.186 28 11.5 25.314 11.5 22C11.5 18 15 14 17.5 10C20 14 23.5 18 23.5 22C23.5 25.314 20.814 28 17.5 28Z"
+                      fill="#F53838"
+                    />
+                  </svg>
+                  <span className="text-xl font-bold text-dark tracking-tight">
+                    <span className="font-extrabold text-[#0B132A]">Lasles</span>
+                    <span className="font-medium text-[#0B132A]">VPN</span>
+                    <span className="text-xs font-normal text-muted mr-2">| لسلز وی‌پی‌ان</span>
+                  </span>
+                </div>
+                <p className="text-muted text-sm sm:text-base leading-relaxed max-w-sm font-normal">
+                  <strong className="text-dark font-medium">لسلز وی‌پی‌ان</strong> یک شبکه خصوصی مجازی امن، پرسرعت و پایدار است که با ویژگی‌های منحصربه‌فرد، امنیت کامل حریم خصوصی شما را در دنیای دیجیتال تضمین می‌کند.
+                </p>
+                {/* Social Icons */}
+                <div className="flex items-center space-x-3 space-x-reverse pt-2">
+                  <a href="#" className="w-10 h-10 rounded-full bg-[#FFECEC] text-[#F53838] flex items-center justify-center shadow-sm hover:bg-[#F53838] hover:text-white transition duration-200">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-[#FFECEC] text-[#F53838] flex items-center justify-center shadow-sm hover:bg-[#F53838] hover:text-white transition duration-200">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                  </a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-[#FFECEC] text-[#F53838] flex items-center justify-center shadow-sm hover:bg-[#F53838] hover:text-white transition duration-200">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                    </svg>
+                  </a>
+                </div>
+                <p className="text-gray-400 text-sm pt-4">
+                  © کلیه حقوق مادی و معنوی برای <span className="font-semibold text-gray-700">لسلز وی‌پی‌ان (©2020LaslesVPN)</span> محفوظ است.
+                </p>
+              </div>
+
+              {/* Col: Product */}
+              <div>
+                <h4 className="text-dark font-bold text-lg mb-6">محصولات</h4>
+                <ul className="space-y-3.5 text-muted text-sm sm:text-base">
+                  <li><a href="#" className="hover:text-brand transition">دانلود نرم‌افزار</a></li>
+                  <li><a href="#pricing" className="hover:text-brand transition">تعرفه‌ها و پلن‌ها</a></li>
+                  <li><a href="#" className="hover:text-brand transition">لوکیشن‌های سرور</a></li>
+                  <li><a href="#" className="hover:text-brand transition">وضعیت سرورها</a></li>
+                  <li><a href="#" className="hover:text-brand transition">کشورها</a></li>
+                  <li><a href="#" className="hover:text-brand transition">وبلاگ</a></li>
+                </ul>
+              </div>
+
+              {/* Col: Engage */}
+              <div>
+                <h4 className="text-dark font-bold text-lg mb-6">راهنما و پشتیبانی</h4>
+                <ul className="space-y-3.5 text-muted text-sm sm:text-base">
+                  <li><a href="#" className="hover:text-brand transition">لسلز وی‌پی‌ان چیست؟</a></li>
+                  <li><a href="#" className="hover:text-brand transition">سوالات متداول (FAQ)</a></li>
+                  <li><a href="#" className="hover:text-brand transition">آموزش اتصال</a></li>
+                  <li><a href="#about" className="hover:text-brand transition">درباره ما</a></li>
+                  <li><a href="#" className="hover:text-brand transition">حریم خصوصی</a></li>
+                  <li><a href="#" className="hover:text-brand transition">شرایط و قوانین</a></li>
+                </ul>
+              </div>
+
+              {/* Col: Earn Money */}
+              <div>
+                <h4 className="text-dark font-bold text-lg mb-6">کسب درآمد</h4>
+                <ul className="space-y-3.5 text-muted text-sm sm:text-base">
+                  <li><a href="#" className="hover:text-brand transition">همکاری در فروش (افیلیت)</a></li>
+                  <li><a href="#" className="hover:text-brand transition">نماینده فروش شوید</a></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    // --- MAIN APP ---
+    function App() {
+      return (
+        <div className="min-h-screen flex flex-col justify-between">
+          <Navbar />
+          <main>
+            <Hero />
+            <Stats />
+            <Features />
+            <Pricing />
+            <Network />
+            <Testimonials />
+            <SubscribeCTA />
+          </main>
+          <Footer />
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

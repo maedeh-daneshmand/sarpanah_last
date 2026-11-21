@@ -1,0 +1,5 @@
+{
+  "platform": "nextjs",
+  "app": "sarpanah-frontend",
+  "port": 3000
+}

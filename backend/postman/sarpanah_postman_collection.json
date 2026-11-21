@@ -1,0 +1,335 @@
+{
+  "info": {
+    "name": "SarPanah Accommodation API",
+    "_postman_id": "sarpanah-api-collection-v1",
+    "description": "Complete Postman collection for SarPanah accommodation reservation system backend API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Mahan Rezaei\",\n  \"email\": \"mahan@example.com\",\n  \"phone\": \"09121112233\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"guest\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"]}
+          }
+        },
+        {
+          "name": "Login (JSON)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mahan@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/login-json", "host": ["{{baseUrl}}"], "path": ["auth", "login-json"]}
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Locations",
+      "item": [
+        {
+          "name": "List Countries",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/locations/countries", "host": ["{{baseUrl}}"], "path": ["locations", "countries"]}
+          }
+        },
+        {
+          "name": "List Provinces",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/locations/provinces", "host": ["{{baseUrl}}"], "path": ["locations", "provinces"]}
+          }
+        },
+        {
+          "name": "List Cities",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/locations/cities", "host": ["{{baseUrl}}"], "path": ["locations", "cities"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Search Active Properties",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/properties/?city_id=1&min_guests=2",
+              "host": ["{{baseUrl}}"],
+              "path": ["properties", ""],
+              "query": [
+                {"key": "city_id", "value": "1"},
+                {"key": "min_guests", "value": "2"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Property Details",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/properties/1", "host": ["{{baseUrl}}"], "path": ["properties", "1"]}
+          }
+        },
+        {
+          "name": "Create Property (Host)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"city_id\": 2,\n  \"type_id\": 1,\n  \"policy_id\": 1,\n  \"title\": \"Seaside Villa in Ramsar\",\n  \"description\": \"Charming coastal villa with garden and sea view\",\n  \"address\": \"Ramsar, Seaside Ave 14\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/properties/", "host": ["{{baseUrl}}"], "path": ["properties", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Units",
+      "item": [
+        {
+          "name": "Create Unit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": 1,\n  \"name\": \"Suite 101\",\n  \"max_guests\": 4,\n  \"bedrooms\": 2,\n  \"beds\": 3,\n  \"bathrooms\": 1,\n  \"base_price_per_night\": 1500.00,\n  \"cleaning_fee\": 100.00,\n  \"is_active\": true\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/units/", "host": ["{{baseUrl}}"], "path": ["units", ""]}
+          }
+        },
+        {
+          "name": "Set Calendar Custom Price / Block Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"day\": \"2026-12-31\",\n  \"price\": 2500.00,\n  \"is_blocked\": false\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/units/1/calendar", "host": ["{{baseUrl}}"], "path": ["units", "1", "calendar"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get Price Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unit_id\": 1,\n  \"check_in\": \"2026-12-25\",\n  \"check_out\": \"2026-12-28\",\n  \"guests_count\": 2,\n  \"coupon_code\": \"WELCOME10\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/bookings/quote", "host": ["{{baseUrl}}"], "path": ["bookings", "quote"]}
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unit_id\": 1,\n  \"check_in\": \"2026-12-25\",\n  \"check_out\": \"2026-12-28\",\n  \"guests_count\": 2\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/bookings/", "host": ["{{baseUrl}}"], "path": ["bookings", ""]}
+          }
+        },
+        {
+          "name": "List User Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/bookings/", "host": ["{{baseUrl}}"], "path": ["bookings", ""]}
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/bookings/1/cancel", "host": ["{{baseUrl}}"], "path": ["bookings", "1", "cancel"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Simulate Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": 1,\n  \"method\": \"card\",\n  \"simulate_success\": true\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/payments/", "host": ["{{baseUrl}}"], "path": ["payments", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Submit Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": 1,\n  \"rating\": 5,\n  \"comment\": \"Exceptional cleanliness and hospitality!\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/reviews/", "host": ["{{baseUrl}}"], "path": ["reviews", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlists",
+      "item": [
+        {
+          "name": "Create Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Summer Vacations\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/wishlists/", "host": ["{{baseUrl}}"], "path": ["wishlists", ""]}
+          }
+        },
+        {
+          "name": "Add Property to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": 1\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/wishlists/1/items", "host": ["{{baseUrl}}"], "path": ["wishlists", "1", "items"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver_id\": 2,\n  \"body\": \"Hi! Is parking available for two cars?\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/messages/", "host": ["{{baseUrl}}"], "path": ["messages", ""]}
+          }
+        },
+        {
+          "name": "Get Chat History",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {
+              "raw": "{{baseUrl}}/messages/?contact_id=2",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", ""],
+              "query": [{"key": "contact_id", "value": "2"}]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

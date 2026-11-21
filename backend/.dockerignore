@@ -1,0 +1,10 @@
+sarpanah
+*.pyc
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+*.egg-info/
+dist/
+build/
+.DS_Store
